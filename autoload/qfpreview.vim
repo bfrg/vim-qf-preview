@@ -28,7 +28,7 @@ endfunction
 
 function! qfpreview#open(idx) abort
     let wininfo = getwininfo(win_getid())[0]
-    let qflist = wininfo.quickfix ? getqflist() : getloclist(0)
+    let qflist = wininfo.loclist ? getloclist(0) : getqflist()
     let qfitem = qflist[a:idx]
     let title = printf('%s (%d/%d)', bufname(qfitem.bufnr), a:idx+1, len(qflist))
 
