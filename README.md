@@ -3,6 +3,7 @@
 A plugin for the quickfix and location list windows to quickly preview the file
 with the quickfix item under the cursor in a popup window.
 
+
 ## Usage
 
 In the quickfix window navigate the cursor to the desired error and press
@@ -14,10 +15,10 @@ Press <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd> to scroll the popup window down
 or up, respectively.
 
 **Note:** In older Vim versions pressing <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd>
-will first jump to the first buffer line before scrolling works. Pressing
-<kbd>Ctrl-l</kbd> will redraw the window and put the line with the error back to
-the top of the popup window. After that <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd>
-will scroll the text as intended.
+will first jump to the first buffer line and start scrolling from there.
+Pressing <kbd>Ctrl-l</kbd> will redraw the window and put the line with the
+error back to the top of the popup window. After that <kbd>Ctrl-j</kbd> or
+<kbd>Ctrl-k</kbd> will scroll the text as intended.
 
 Press <kbd>x</kbd>, or move the cursor in any direction to close the popup
 window.
@@ -27,6 +28,7 @@ window.
 While the mouse pointer is on the popup window, mouse scroll events will cause
 the text to scroll up or down as one would expect. Click on `X` in the top right
 corner to close the window.
+
 
 ## Installation
 
@@ -48,6 +50,7 @@ plugin manager, add the following to your `.vimrc`:
 ```vim
 Plug 'bfrg/vim-qf-preview'
 ```
+
 
 ## License
 
