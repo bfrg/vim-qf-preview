@@ -58,6 +58,13 @@ function! qfpreview#open(idx) abort
             \ moved: 'any',
             \ filter: function('s:popup_filter'),
             \ })
+
+    if !has('patch-8.1.1919')
+        call setwinvar(winid, '&number', 0)
+        call setwinvar(winid, '&relativenumber', 0)
+        call setwinvar(winid, '&cursorline', 0)
+        call setwinvar(winid, '&signcolumn', 'no')
+    endif
 endfunction
 
 let &cpoptions = s:save_cpo
