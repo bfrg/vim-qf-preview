@@ -59,6 +59,10 @@ function! qfpreview#open(idx) abort
             \ filter: function('s:popup_filter'),
             \ })
 
+    if  !has('patch-8.1.1945') && has('patch-8.1.1929')
+        call win_execute(winid, 'normal! zz')
+    endif
+
     if !has('patch-8.1.1919')
         call setwinvar(winid, '&number', 0)
         call setwinvar(winid, '&relativenumber', 0)
