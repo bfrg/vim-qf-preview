@@ -1,7 +1,32 @@
 # vim-qf-preview
 
-vim-qf-preview is a `ftplugin` for the quickfix window to quickly preview the
-file with the quickfix error under the cursor in a popup window.
+A plugin for the quickfix and location list windows to quickly preview the file
+with the quickfix item under the cursor in a popup window.
+
+## Usage
+
+In the quickfix window navigate the cursor to the desired error and press
+<kbd>p</kbd> to open a popup window with the file containing the error. The
+window is scrolled such that the buffer line with the error is at the top of the
+window.
+
+Press <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd> to scroll the popup window down
+or up, respectively.
+
+**Note:** In older Vim versions pressing <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd>
+will first jump to the first buffer line before scrolling works. Pressing
+<kbd>Ctrl-l</kbd> will redraw the window and put the line with the error back to
+the top of the popup window. After that <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd>
+will scroll the text as intended.
+
+Press <kbd>x</kbd>, or move the cursor in any direction to close the popup
+window.
+
+#### Mouse events
+
+While the mouse pointer is on the popup window, mouse scroll events will cause
+the text to scroll up or down as one would expect. Click on `X` in the top right
+corner to close the window.
 
 ## Installation
 
@@ -21,7 +46,7 @@ name. For more details see `:help packages`.
 Assuming [vim-plug](https://github.com/junegunn/vim-plug) is your favorite
 plugin manager, add the following to your `.vimrc`:
 ```vim
-Plug "bfrg/vim-qf-preview"
+Plug 'bfrg/vim-qf-preview'
 ```
 
 ## License
