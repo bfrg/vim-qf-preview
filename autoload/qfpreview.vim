@@ -41,6 +41,11 @@ function! qfpreview#open(idx) abort
     let freespace = &lines - &cmdheight - wininfo.height - 3
     let height = freespace > 15 ? 15 : freespace
 
+    hi def link QfPreview Pmenu
+    hi def link QfPreviewTitle Pmenu
+    hi def link QfPreviewScrollbar PmenuSbar
+    hi def link QfPreviewThumb PmenuThumb
+
     silent let winid = popup_create(qfitem.bufnr, #{
             \ line: wininfo.winrow - 1,
             \ col: wininfo.wincol,
@@ -57,6 +62,10 @@ function! qfpreview#open(idx) abort
             \ borderchars: [' '],
             \ moved: 'any',
             \ filter: function('s:popup_filter'),
+            \ highlight: 'QfPreview',
+            \ borderhighlight: ['QfPreviewTitle'],
+            \ scrollbarhighlight: 'QfPreviewScrollbar',
+            \ thumbhighlight: 'QfPreviewThumb'
             \ })
 
     if  !has('patch-8.1.1945') && has('patch-8.1.1929')
