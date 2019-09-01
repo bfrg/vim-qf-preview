@@ -12,9 +12,8 @@ vim-qf-preview is a |ftplugin| for the |quickfix-window| and |location-list-wind
 to quickly preview the file with the quickfix error under the cursor in a
 |popup-window|.
 
-The popup window is positioned directly above the quickfix or location list
-window without rearranging the current window layout. It has the same width as
-the quickfix (or location list) window it was opened from.
+The popup window is placed above the quickfix or location list window without
+rearranging the current window layout.
 
 Moving the cursor in any direction while the popup window is displayed will
 close it. See also |qfpreview_close| mappings below.
@@ -23,21 +22,21 @@ close it. See also |qfpreview_close| mappings below.
 MAPPINGS                                                  *qfpreview-mappings*
 
                                                             *qfpreview_p*
-p       In the quickfix window navigate the cursor to the desired error and
-        press "p" to open a popup window with the file containing the error.
-        The window is scrolled such that the buffer line with the error is at
-        the top of the window.
+p           In the quickfix window navigate the cursor to the desired error
+            and press "p" to open a popup window with the file containing the
+            error. The window is scrolled such that the buffer line with the
+            error is at the top of the window.
 
                                                             *qfpreview_close*
                                                 *qfpreview_<Esc>* *qfpreview_x*
-<Esc>   Close the popup window.
+<Esc>       Close the popup window.
 x
 
                                                             *qfpreview_CTRL-J*
-CTRL-J  Scroll the popup window down 2 lines.
+CTRL-J      Scroll the popup window down 2 lines.
 
                                                             *qfpreview_CTRL-K*
-CTRL-K  Scroll the popup window up 2 lines.
+CTRL-K      Scroll the popup window up 2 lines.
 
 Note In older Vim versions pressing CTRL-J or CTRL-K will first jump to the
 first buffer line and start scrolling from there. Pressing CTRL-L will redraw
@@ -57,16 +56,16 @@ CONFIGURATION                                        *qfpreview-configuration*
                                                        *qfpreview-highlight*
 Highlight Groups ~
 
-The following highlighting groups are set and used by the plugin:
+The following highlighting groups are used by the plugin:
 
                                                          *hl-QfPreview*
 QfPreview           Normal text in the popup window. This is the equivalent of
-                    the |hl-Normal| highlight group in a regular window.
+                    the |hl-Normal| highlight group in regular windows.
 
                     By default links to |hl-Pmenu|.
 
                                                          *hl-QfPreviewTitle*
-QfPreviewTitle      Title of the popup window (top line).
+QfPreviewTitle      Title (top line) of the popup window.
 
                     By default links to |hl-Pmenu|.
                                                          *hl-QfPreviewScrollbar*
