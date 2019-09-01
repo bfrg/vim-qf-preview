@@ -14,14 +14,15 @@ window.
 Press <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd> to scroll the popup window down
 or up, respectively.
 
-**Note:** In older Vim versions pressing <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd>
-will first jump to the first buffer line and start scrolling from there.
-Pressing <kbd>Ctrl-l</kbd> will redraw the window and put the line with the
-error back to the top of the popup window. After that <kbd>Ctrl-j</kbd> or
-<kbd>Ctrl-k</kbd> will scroll the text as intended.
+**Note:** In older Vim versions (older than `8.1.1929`) pressing
+<kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd> will first jump to the first buffer line
+and start scrolling from there. Pressing <kbd>Ctrl-l</kbd> will redraw the
+window and put the line with the error back to the top of the popup window.
+After that <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd> will scroll the text as
+intended.
 
-Press <kbd>x</kbd>, or move the cursor in any direction to close the popup
-window.
+Press either <kbd>x</kbd> or <kbd>Esc</kbd>, or move the cursor in any direction
+to close the popup window.
 
 #### Mouse events
 

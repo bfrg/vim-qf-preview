@@ -12,22 +12,26 @@ vim-qf-preview is a |ftplugin| for the |quickfix-window| and |location-list-wind
 to quickly preview the file with the quickfix error under the cursor in a
 |popup-window|.
 
-The popup window opens up directly above (or below) the quickfix or location
-list window without rearranging the current window layout. It always has the
-same width as the quickfix or location list window where it was opened from.
+The popup window is positioned directly above the quickfix or location list
+window without rearranging the current window layout. It has the same width as
+the quickfix (or location list) window it was opened from.
+
+Moving the cursor in any direction while the popup window is displayed will
+close it. See also |qfpreview_close| mappings below.
 
 ==============================================================================
 MAPPINGS                                                  *qfpreview-mappings*
 
-                                                       *qf_p* *qfpreview_p*
+                                                            *qfpreview_p*
 p       In the quickfix window navigate the cursor to the desired error and
-        press "p" to open a popup window displaying the file containing the
-        error. The window is scrolled such that the buffer line with the error
-        is at the top of the window.
+        press "p" to open a popup window with the file containing the error.
+        The window is scrolled such that the buffer line with the error is at
+        the top of the window.
 
-                                                            *qfpreview_x*
-x       Press "x" or move the cursor in any direction to close the popup
-        window.
+                                                            *qfpreview_close*
+                                                *qfpreview_<Esc>* *qfpreview_x*
+<Esc>   Close the popup window.
+x
 
                                                             *qfpreview_CTRL-J*
 CTRL-J  Scroll the popup window down 2 lines.

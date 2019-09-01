@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Aug 31, 2019
+" Last Change:  Sep 1, 2019
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -19,7 +19,7 @@ function! s:popup_filter(winid, key) abort
     elseif a:key == "\<c-j>"
         call win_execute(a:winid, "normal! 2\<c-e>")
         return v:true
-    elseif a:key ==# 'x'
+    elseif a:key ==# 'x' || a:key ==# "\<esc>"
         call popup_close(a:winid)
         return v:true
     endif
