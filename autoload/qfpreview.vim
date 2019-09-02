@@ -80,6 +80,11 @@ function! qfpreview#open(idx) abort
         call setwinvar(winid, '&relativenumber', 0)
         call setwinvar(winid, '&cursorline', 0)
         call setwinvar(winid, '&signcolumn', 'no')
+        call setwinvar(winid, '&cursorcolumn', 0)
+        call setwinvar(winid, '&foldcolumn' 0)
+        call setwinvar(winid, '&colorcolumn', '')
+        call setwinvar(winid, '&list', 0)
+        call setwinvar(winid, '&scrolloff', 0)
     endif
 endfunction
 
