@@ -28,7 +28,7 @@ p           In the quickfix window navigate the cursor to the desired error
             error is at the top of the window.
 
                                                             *qfpreview_close*
-                                                *qfpreview_<Esc>* *qfpreview_x*
+                                                 *qfpreview_<Esc>* *qfpreview_x*
 <Esc>       Close the popup window.
 x
 
@@ -38,13 +38,8 @@ CTRL-J      Scroll the popup window down 2 lines.
                                                             *qfpreview_CTRL-K*
 CTRL-K      Scroll the popup window up 2 lines.
 
-Note In older Vim versions pressing CTRL-J or CTRL-K will first jump to the
-first buffer line and start scrolling from there. Pressing CTRL-L will redraw
-the window and put the line with the error back to the top of the popup
-window. After that CTRL-J or CTRL-K will scroll the text as intended.
-
 ==============================================================================
-MOUSE EVENTS                                                *qfpreview-mouse*
+MOUSE EVENTS                                                 *qfpreview-mouse*
 
 While the mouse pointer is on the popup window, mouse scroll events will cause
 the text to scroll up or down as one would expect. Click on "X" in the top
@@ -53,7 +48,7 @@ right corner to close the window.
 ==============================================================================
 CONFIGURATION                                        *qfpreview-configuration*
 
-                                                       *qfpreview-highlight*
+                                                         *qfpreview-highlight*
 Highlight Groups ~
 
 The following highlighting groups are used by the plugin:

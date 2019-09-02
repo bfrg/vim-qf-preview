@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Sep 1, 2019
+" Last Change:  Sep 2, 2019
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -13,11 +13,18 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 function! s:popup_filter(winid, key) abort
-    if a:key == "\<c-k>"
-        call win_execute(a:winid, "normal! 2\<c-y>")
+    if a:key ==# "\<c-k>"
+        let firstline = popup_getoptions(a:winid).firstline
+        let newline = (firstline - 2) > 0 ? (firstline - 2) : 1
+        call popup_setoptions(a:winid, #{firstline: newline})
         return v:true
-    elseif a:key == "\<c-j>"
-        call win_execute(a:winid, "normal! 2\<c-e>")
+    elseif a:key ==# "\<c-j>"
+        let firstline = popup_getoptions(a:winid).firstline
+        call win_execute(a:winid, 'let g:nlines = line("$")')
+        let newline = firstline < g:nlines ? (firstline + 2) : g:nlines
+        unlet g:nlines
+        call popup_setoptions(a:winid, #{firstline: newline})
+        return v:true
         return v:true
     elseif a:key ==# 'x' || a:key ==# "\<esc>"
         call popup_close(a:winid)
@@ -67,10 +74,6 @@ function! qfpreview#open(idx) abort
             \ scrollbarhighlight: 'QfPreviewScrollbar',
             \ thumbhighlight: 'QfPreviewThumb'
             \ })
-
-    if  !has('patch-8.1.1945') && has('patch-8.1.1929')
-        call win_execute(winid, 'normal! zz')
-    endif
 
     if !has('patch-8.1.1919')
         call setwinvar(winid, '&number', 0)
