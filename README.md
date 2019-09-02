@@ -14,6 +14,9 @@ window.
 Press <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd> to scroll the popup window down
 or up, respectively.
 
+Pressing <kbd>gg</kbd> or <kbd>G</kbd> will scroll to the top or bottom of the
+displayed buffer, respectively.
+
 Press either <kbd>x</kbd> or <kbd>Esc</kbd>, or move the cursor in any direction
 to close the popup window.
 

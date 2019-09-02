@@ -25,6 +25,14 @@ function! s:popup_filter(winid, key) abort
         unlet g:nlines
         call popup_setoptions(a:winid, #{firstline: newline})
         return v:true
+    elseif a:key ==# 'g'
+        call popup_setoptions(a:winid, #{firstline: 1})
+        return v:true
+    elseif a:key ==# 'G'
+        let height = popup_getpos(a:winid).core_height
+        call win_execute(a:winid, 'let g:nlines = line("$")')
+        call popup_setoptions(a:winid, #{firstline: g:nlines - height + 1})
+        unlet g:nlines
         return v:true
     elseif a:key ==# 'x' || a:key ==# "\<esc>"
         call popup_close(a:winid)

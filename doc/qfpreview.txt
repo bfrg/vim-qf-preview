@@ -38,6 +38,12 @@ CTRL-J      Scroll the popup window down 2 lines.
                                                             *qfpreview_CTRL-K*
 CTRL-K      Scroll the popup window up 2 lines.
 
+                                                                *qfpreview_gg*
+gg          Jump to first line of displayed buffer.
+
+                                                                 *qfpreview_G*
+G           Jump to bottom of displayed buffer.
+
 ==============================================================================
 MOUSE EVENTS                                                 *qfpreview-mouse*
 
