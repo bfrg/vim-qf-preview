@@ -3,6 +3,11 @@
 A plugin for the quickfix and location list windows to quickly preview the file
 with the quickfix item under the cursor in a popup window.
 
+| Before                            | After                             |
+|:---------------------------------:|:---------------------------------:|
+| ![qf-bottom-1][Quickfix-bottom-1] | ![qf-bottom-2][Quickfix-bottom-2] |
+| ![qf-left-1][Quickfix-left-1]     | ![qf-left-2][Quickfix-left-2]     |
+
 
 ## Usage
 
@@ -52,3 +57,8 @@ Plug 'bfrg/vim-qf-preview'
 ## License
 
 Distributed under the same terms as Vim itself. See `:help license`.
+
+[Quickfix-bottom-1]: https://user-images.githubusercontent.com/6266600/64166843-385b8580-ce48-11e9-9412-03b545e795f6.png
+[Quickfix-bottom-2]: https://user-images.githubusercontent.com/6266600/64166855-3db8d000-ce48-11e9-87ac-5773d201e11c.png "Popup window appears above quickfix window"
+[Quickfix-left-1]: https://user-images.githubusercontent.com/6266600/64167089-c6377080-ce48-11e9-9742-51ebfad6f6b2.png
+[Quickfix-left-2]: https://user-images.githubusercontent.com/6266600/64167088-c59eda00-ce48-11e9-9d4e-9a65a8c40f62.png "Popup window appears above quickfix window with same width"
