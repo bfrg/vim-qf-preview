@@ -9,6 +9,7 @@ with the quickfix item under the cursor in a popup window.
 |:---------------------------------:|:---------------------------------:|
 | ![qf-bottom-1][Quickfix-bottom-1] | ![qf-bottom-2][Quickfix-bottom-2] |
 | ![qf-left-1][Quickfix-left-1]     | ![qf-left-2][Quickfix-left-2]     |
+| ![qf-top-1][Quickfix-top-1]       | ![qf-top-2][Quickfix-top-2]       |
 
 
 ## Usage
@@ -70,3 +71,5 @@ Distributed under the same terms as Vim itself. See `:help license`.
 [Quickfix-bottom-2]: https://user-images.githubusercontent.com/6266600/64166855-3db8d000-ce48-11e9-87ac-5773d201e11c.png "Popup window appears above quickfix window"
 [Quickfix-left-1]: https://user-images.githubusercontent.com/6266600/64167089-c6377080-ce48-11e9-9742-51ebfad6f6b2.png
 [Quickfix-left-2]: https://user-images.githubusercontent.com/6266600/64167088-c59eda00-ce48-11e9-9d4e-9a65a8c40f62.png "Popup window appears above quickfix window with same width"
+[Quickfix-top-1]: https://user-images.githubusercontent.com/6266600/64167267-31814280-ce49-11e9-879a-b9a1275a682d.png
+[Quickfix-top-2]: https://user-images.githubusercontent.com/6266600/64167268-31814280-ce49-11e9-92a1-bc02be2096ac.png "Popup window appears below quickfix window"
