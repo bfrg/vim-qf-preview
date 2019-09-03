@@ -33,6 +33,12 @@ While the mouse pointer is on the popup window, mouse scroll events will cause
 the text to scroll up or down as one would expect. Click on `X` in the top right
 corner to close the window.
 
+#### Configuration
+
+The appearance of the popup window can be configured using the highlight groups
+`QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar` and `QfPreviewThumb`. See
+`:help qfpreview-highlight` for more details.
+
 
 ## Installation
 
