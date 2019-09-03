@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Sep 2, 2019
+" Last Change:  Sep 3, 2019
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -41,6 +41,14 @@ function! s:popup_filter(winid, key) abort
     return v:false
 endfunction
 
+function! s:space_above(wininfo) abort
+    return a:wininfo.winrow - 1
+endfunction
+
+function! s:space_below(wininfo) abort
+    return &lines - (a:wininfo.winrow + a:wininfo.height - 1) - &cmdheight
+endfunction
+
 function! qfpreview#open(idx) abort
     let wininfo = getwininfo(win_getid())[0]
     let qflist = wininfo.loclist ? getloclist(0) : getqflist()
@@ -53,18 +61,48 @@ function! qfpreview#open(idx) abort
         let title = '…' . title[-width:]
     endif
 
-    let freespace = &lines - &cmdheight - wininfo.height - 3
-    let height = freespace > 15 ? 15 : freespace
+    " Default height (padding of 1 at top and bottom not incluced)
+    let height = 15
 
-    hi def link QfPreview Pmenu
-    hi def link QfPreviewTitle Pmenu
-    hi def link QfPreviewScrollbar PmenuSbar
-    hi def link QfPreviewThumb PmenuThumb
+    if s:space_above(wininfo) > height
+        if s:space_above(wininfo) == height + 1
+            let height = height - 1
+        endif
+        let opts = #{
+                \ line: wininfo.winrow - 1,
+                \ pos: 'botleft'
+                \ }
+    elseif s:space_below(wininfo) >= height
+        let opts = #{
+                \ line: wininfo.winrow + wininfo.height,
+                \ pos: 'topleft'
+                \ }
+    elseif s:space_above(wininfo) > 5
+        let height = s:space_above(wininfo) - 2
+        let opts = #{
+                \ line: wininfo.winrow - 1,
+                \ pos: 'botleft'
+                \ }
+    elseif s:space_below(wininfo) > 5
+        let height = s:space_below(wininfo) - 2
+        let opts = #{
+                \ line: wininfo.winrow + wininfo.height,
+                \ pos: 'topleft'
+                \ }
+    elseif s:space_above(wininfo) <= 5 || s:space_below(wininfo) <= 5
+        let opts = #{
+                \ line: &lines - &cmdheight,
+                \ pos: 'botleft'
+                \ }
+    else
+        echohl ErrorMsg
+        echomsg 'qfpreview: Not enough space to display popup window.'
+        echohl None
+        return
+    endif
 
-    silent let winid = popup_create(qfitem.bufnr, #{
-            \ line: wininfo.winrow - 1,
+    call extend(opts, #{
             \ col: wininfo.wincol,
-            \ pos: 'botleft',
             \ minheight: height,
             \ maxheight: height,
             \ minwidth: wininfo.width - 3,
@@ -82,6 +120,13 @@ function! qfpreview#open(idx) abort
             \ scrollbarhighlight: 'QfPreviewScrollbar',
             \ thumbhighlight: 'QfPreviewThumb'
             \ })
+
+    hi def link QfPreview Pmenu
+    hi def link QfPreviewTitle Pmenu
+    hi def link QfPreviewScrollbar PmenuSbar
+    hi def link QfPreviewThumb PmenuThumb
+
+    silent let winid = popup_create(qfitem.bufnr, opts)
 
     if !has('patch-8.1.1919')
         call setwinvar(winid, '&number', 0)
