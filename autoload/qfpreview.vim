@@ -12,6 +12,49 @@ scriptencoding utf-8
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+" Holds information about the currently previewed buffer
+" Valid keys:
+"   bufnr     - buffer number as obtained with bufnr()
+"   bufloaded - 1 if buffer has already been loaded [bufloaded()] BEFORE
+"               displayed in the popup window, 0 otherwise
+"   buflisted - 1 if buffer was already listed [buflisted()] before displayed in
+"               the popup window, 0 otherwise
+let s:bufr = {}
+
+" We need to delete the buffer using a timer since the callback function is
+" invoked just BEFORE the popup window is closed, see :h popup_close(), and
+" deleting the buffer while its still displayed in the popup window doesn't
+" work.
+"
+" Deleting the displayed buffer after the popup window is closed has two
+" reasons:
+"
+" 1. Free the memory allocated for the buffer (if we don't open the buffer in a
+"    regular window, we probably won't need it anymore).
+"
+" 2. If a swap file already exists for the buffer (because it is edited in
+"    another Vim instance), Vim won't show the E325 attention screen and ask the
+"    user for input, when the buffer is later edited in a regular window.
+"    See also 'peculiarities' under :h preview-popup.
+function! s:popup_close_cb(winid, result) abort
+    call timer_start(1, function('s:cleanup'))
+endfunction
+
+function! s:cleanup(timer) abort
+    " If user hits <cr> to edit the buffer, keep the buffer listed and loaded
+    " and don't remove it again
+    if bufwinid(s:bufr.bufnr) != -1
+        return
+    endif
+
+    if !s:bufr.bufloaded
+        execute 'bunload' s:bufr.bufnr
+    endif
+    if !s:bufr.buflisted
+        silent! execute 'bdelete' s:bufr.bufnr
+    endif
+endfunction
+
 function! s:popup_filter(winid, key) abort
     if a:key ==# "\<c-k>"
         let firstline = popup_getoptions(a:winid).firstline
@@ -115,6 +158,7 @@ function! qfpreview#open(idx) abort
             \ borderchars: [' '],
             \ moved: 'any',
             \ filter: function('s:popup_filter'),
+            \ callback: function('s:popup_close_cb'),
             \ highlight: 'QfPreview',
             \ borderhighlight: ['QfPreviewTitle'],
             \ scrollbarhighlight: 'QfPreviewScrollbar',
@@ -126,7 +170,21 @@ function! qfpreview#open(idx) abort
     hi def link QfPreviewScrollbar PmenuSbar
     hi def link QfPreviewThumb PmenuThumb
 
-    silent let winid = popup_create(qfitem.bufnr, opts)
+    let s:bufr = {
+            \ 'bufnr': qfitem.bufnr,
+            \ 'bufloaded': bufloaded(qfitem.bufnr) ? 1 : 0,
+            \ 'buflisted': buflisted(qfitem.bufnr) ? 1 : 0
+            \ }
+
+    " If a swap file already exists for a buffer that is passed to
+    " popup_create(), Vim will echo the E325 attention message but won't present
+    " the swap-exists-choices dialog. When the popup window is closed, the
+    " buffer will be unlisted but NOT unloaded.  If the buffer is later edited
+    " in a regular window, the user might not remember that it is also edited in
+    " another Vim instance, and end up with two versions of the same file.
+    " Therefore, we suppress the E325 message entirely and :bunload the buffer
+    " in the popup callback.
+    silent! let winid = popup_create(qfitem.bufnr, opts)
 
     if !has('patch-8.1.1919')
         call setwinvar(winid, '&number', 0)
