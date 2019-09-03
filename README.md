@@ -3,6 +3,8 @@
 A plugin for the quickfix and location list windows to quickly preview the file
 with the quickfix item under the cursor in a popup window.
 
+**Note:** The plugin requires at least Vim `8.1.1705`.
+
 | Before                            | After                             |
 |:---------------------------------:|:---------------------------------:|
 | ![qf-bottom-1][Quickfix-bottom-1] | ![qf-bottom-2][Quickfix-bottom-2] |

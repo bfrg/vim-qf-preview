@@ -3,7 +3,7 @@
 " File:         after/ftplugin/qf.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Aug 31, 2019
+" Last Change:  Sep 3, 2019
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -11,7 +11,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 " Stop here if user doesn't want ftplugin mappings
-if exists('g:no_plugin_maps')
+if exists('g:no_plugin_maps') || !has('patch-8.1.1705')
     finish
 endif
 
