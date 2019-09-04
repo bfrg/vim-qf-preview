@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Sep 3, 2019
+" Last Change:  Sep 4, 2019
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -12,16 +12,29 @@ scriptencoding utf-8
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+let s:defaults = #{
+        \ height: 15,
+        \ scrollup: "\<c-k>",
+        \ scrolldown: "\<c-j>",
+        \ close: 'x',
+        \ mapping: v:false
+        \ }
+
+function! s:get(key) abort
+    let var = get(b:, 'qfpreview', get(g:, 'qfpreview', {}))
+    return has_key(var, a:key) ? var[a:key] : s:defaults[a:key]
+endfunction
+
 function! s:popup_filter(winid, key) abort
-    if a:key ==# "\<c-k>"
-        let firstline = popup_getoptions(a:winid).firstline
-        let newline = (firstline - 2) > 0 ? (firstline - 2) : 1
+    if a:key ==# s:get('scrollup')
+        let line = popup_getoptions(a:winid).firstline
+        let newline = (line - 2) > 0 ? (line - 2) : 1
         call popup_setoptions(a:winid, #{firstline: newline})
         return v:true
-    elseif a:key ==# "\<c-j>"
-        let firstline = popup_getoptions(a:winid).firstline
+    elseif a:key ==# s:get('scrolldown')
+        let line = popup_getoptions(a:winid).firstline
         call win_execute(a:winid, 'let g:nlines = line("$")')
-        let newline = firstline < g:nlines ? (firstline + 2) : g:nlines
+        let newline = line < g:nlines ? (line + 2) : g:nlines
         unlet g:nlines
         call popup_setoptions(a:winid, #{firstline: newline})
         return v:true
@@ -34,8 +47,10 @@ function! s:popup_filter(winid, key) abort
         call popup_setoptions(a:winid, #{firstline: g:nlines - height + 1})
         unlet g:nlines
         return v:true
-    elseif a:key ==# 'x' || a:key ==# "\<esc>"
+    elseif a:key ==# s:get('close')
         call popup_close(a:winid)
+        return v:true
+    elseif a:key ==# 'p'
         return v:true
     endif
     return v:false
@@ -53,6 +68,7 @@ function! qfpreview#open(idx) abort
     let wininfo = getwininfo(win_getid())[0]
     let qflist = wininfo.loclist ? getloclist(0) : getqflist()
     let qfitem = qflist[a:idx]
+    let height = s:get('height')
     let title = printf('%s (%d/%d)', bufname(qfitem.bufnr), a:idx+1, len(qflist))
 
     " Truncate long titles
@@ -60,9 +76,6 @@ function! qfpreview#open(idx) abort
         let width = wininfo.width - 4
         let title = '…' . title[-width:]
     endif
-
-    " Default height (padding of 1 at top and bottom not incluced)
-    let height = 15
 
     if s:space_above(wininfo) > height
         if s:space_above(wininfo) == height + 1
@@ -120,6 +133,10 @@ function! qfpreview#open(idx) abort
             \ scrollbarhighlight: 'QfPreviewScrollbar',
             \ thumbhighlight: 'QfPreviewThumb'
             \ })
+
+    if has('patch-8.1.1799')
+        call extend(opts, #{mapping: s:get('mapping')})
+    endif
 
     hi def link QfPreview Pmenu
     hi def link QfPreviewTitle Pmenu

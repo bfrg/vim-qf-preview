@@ -12,8 +12,8 @@ vim-qf-preview is a |ftplugin| for the |quickfix-window| and |location-list-wind
 to quickly preview the file with the quickfix error under the cursor in a
 |popup-window|.
 
-The popup window is placed above the quickfix or location list window without
-rearranging the current window layout.
+The popup window is placed directly above the quickfix window (or below,
+depending on its position), without rearranging the current window layout.
 
 Moving the cursor in any direction while the popup window is displayed will
 close it. See also |qfpreview_close| mappings below.
@@ -27,19 +27,22 @@ p           In the quickfix window navigate the cursor to the desired error
             error. The window is scrolled such that the buffer line with the
             error is at the top of the window.
 
-                                                            *qfpreview_close*
-                                                 *qfpreview_<Esc>* *qfpreview_x*
-<Esc>       Close the popup window.
-x
+                                                             *qfpreview_close*
+                                                                 *qfpreview_x*
+x           Close the popup window.
+            Configurable, see |b:qfpreview.close| below.
 
                                                             *qfpreview_CTRL-J*
 CTRL-J      Scroll the popup window down 2 lines.
+            Configurable, see |b:qfpreview.scrolldown| below.
 
                                                             *qfpreview_CTRL-K*
 CTRL-K      Scroll the popup window up 2 lines.
+            Configurable, see |b:qfpreview.scrollup| below.
 
                                                                 *qfpreview_gg*
 gg          Jump to first line of displayed buffer.
+            Note In Vim `8.1.1799` or above a single "g" press is sufficient.
 
                                                                  *qfpreview_G*
 G           Jump to bottom of displayed buffer.
@@ -53,6 +56,42 @@ right corner to close the window.
 
 ==============================================================================
 CONFIGURATION                                        *qfpreview-configuration*
+
+b:qfpreview                                          *b:qfpreview* *g:qfpreview*
+g:qfpreview
+
+The default key mappings and the height of the popup window can be changed
+through the |buffer-variable| b:qfpreview in |qf.vim|, or through the
+|global-variable| g:qfpreview. The following |Dictionary| keys are supported:
+
+                                                           *b:qfpreview.close*
+    close           Key to press for closing the popup window.
+                    Type: |String|
+                    Default: x
+
+                                                      *b:qfpreview.scrolldown*
+    scrolldown      Key to press for scrolling the text down.
+                    Type: |String|
+                    Default: CTRL-J
+
+                                                        *b:qfpreview.scrollup*
+    scrollup        Key to press for scrolling the text up.
+                    Type: |String|
+                    Default: CTRL-K
+
+                                                          *b:qfpreview.height*
+    height          Number of text lines to display in the popup window.
+                    Type: |Number|
+                    Default: 15
+
+Examples ~
+>
+    " In your vimrc
+    let g:qfpreview = #{scrolldown: "\<C-e>", scrollup: "\<C-y>"}
+
+    " Or in after/ftplugin/qf.vim
+    let b:qfpreview = #{scrolldown: "\<C-e>", scrollup: "\<C-y>", height: 20}
+<
 
                                                          *qfpreview-highlight*
 Highlight Groups ~

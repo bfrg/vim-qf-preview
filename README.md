@@ -21,8 +21,8 @@ or up, respectively.
 Pressing <kbd>gg</kbd> or <kbd>G</kbd> will scroll to the top or bottom of the
 displayed buffer, respectively.
 
-Press either <kbd>x</kbd> or <kbd>Esc</kbd>, or move the cursor in any direction
-to close the popup window.
+Press <kbd>x</kbd>, or move the cursor in any direction to close the popup
+window.
 
 #### Mouse events
 
@@ -30,11 +30,46 @@ While the mouse pointer is on the popup window, mouse scroll events will cause
 the text to scroll up or down as one would expect. Click on `X` in the top right
 corner to close the window.
 
-#### Configuration
 
-The appearance of the popup window can be configured using the highlight groups
-`QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar` and `QfPreviewThumb`. See
-`:help qfpreview-highlight` for more details.
+## Configuration
+
+#### b:qfpreview
+
+The default key mappings and the height of the popup window can be changed
+through the variable `b:qfpreview` in `qf.vim`. The following `Dictionary` keys
+are supported: `scrolldown`, `scrollup`, `close`, and `height`.
+
+Examples:
+
+- Scroll up with <kbd>Ctrl-y</kbd>, and scroll down with <kbd>Ctrl-e</kbd>:
+  ```vim
+  " in after/ftplugin/qf.vim
+  let b:qfpreview = #{scrolldown: "\<C-e>", scrollup: "\<C-y>"}
+  ```
+
+- Scroll up with <kbd>K</kbd>, and scroll down with <kbd>J</kbd>, close popup
+  window with <kbd>Esc</kbd>:
+  ```vim
+  " in after/ftplugin/qf.vim
+  let b:qfpreview = #{scrolldown: 'J', scrollup: 'K', close: "\<Esc>"}
+  ```
+
+- Show 20 text lines in the popup window:
+  ```vim
+  " in after/ftplugin/qf.vim
+  let b:qfpreview = #{height: 20}
+  ```
+
+- Alternatively, use a `global-variable` in your `vimrc`:
+  ```vim
+  let g:qfpreview = #{scrolldown: "\<C-e>", scrollup: "\<C-y>", close: "\<Esc>"}
+  ```
+
+#### Highlighting
+
+The appearance of the popup window can be configured using the highlighting
+groups `QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar` and `QfPreviewThumb`.
+See `:help qfpreview-highlight` for more details.
 
 
 ## Installation
