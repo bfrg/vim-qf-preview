@@ -5,9 +5,16 @@ with the quickfix item under the cursor in a popup window.
 
 **Note:** Plugin requires at least Vim `8.1.1705`.
 
-[![asciicast](https://asciinema.org/a/265817.png)](https://asciinema.org/a/265817)
-The popup window always has the same width as the quickfix window, see
-[here](https://asciinema.org/a/265820).
+<dl>
+  <p align="center">
+  <a href="https://asciinema.org/a/265817">
+    <img src="https://asciinema.org/a/265817.png" width="480">
+  </a>
+  </p>
+</dl>
+
+The popup window will always have the same width as the quickfix window. Live
+[demo](https://asciinema.org/a/265820).
 
 
 ## Usage
