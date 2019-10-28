@@ -13,8 +13,7 @@ with the quickfix item under the cursor in a popup window.
   </p>
 </dl>
 
-The popup window will always have the same width as the quickfix window. Live
-[demo](https://asciinema.org/a/265820).
+The popup window will always have the same width as the quickfix window.
 
 
 ## Usage
@@ -33,20 +32,18 @@ displayed buffer, respectively.
 Press <kbd>x</kbd>, or move the cursor in any direction to close the popup
 window.
 
-#### Mouse events
-
-While the mouse pointer is on the popup window, mouse scroll events will cause
-the text to scroll up or down as one would expect. Click on `X` in the top right
-corner to close the window.
+The height of the popup window can be changed with <kbd>+</kbd> and
+<kbd>-</kbd>.
 
 
 ## Configuration
 
-#### b:qfpreview
+#### b:qfpreview and g:qfpreview
 
 The default key mappings and the height of the popup window can be changed
-through the variable `b:qfpreview` in `qf.vim`. The following `Dictionary` keys
-are supported: `scrolldown`, `scrollup`, `close`, and `height`.
+through the variable `b:qfpreview` in `after/ftplugin/qf.vim`, or alternatively
+through the global dictionary `g:qfpreview`. The following `Dictionary` keys are
+supported: `scrolldown`, `scrollup`, `close`, and `height`.
 
 Examples:
 
@@ -69,14 +66,14 @@ Examples:
   let b:qfpreview = #{height: 20}
   ```
 
-- Alternatively, use a `global-variable` in your `vimrc`:
+- Alternatively you can also use a `global-variable` in your `vimrc`:
   ```vim
   let g:qfpreview = #{scrolldown: "\<C-e>", scrollup: "\<C-y>", close: "\<Esc>"}
   ```
 
 #### Highlighting
 
-The appearance of the popup window can be configured using the highlighting
+The appearance of the popup window can be configured through the highlighting
 groups `QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar` and `QfPreviewThumb`.
 See `:help qfpreview-highlight` for more details.
 
@@ -99,7 +96,9 @@ name. For more details see `:help packages`.
 Assuming [vim-plug](https://github.com/junegunn/vim-plug) is your favorite
 plugin manager, add the following to your `.vimrc`:
 ```vim
-Plug 'bfrg/vim-qf-preview'
+if has('patch-8.1.1705')
+    Plug 'bfrg/vim-qf-preview'
+endif
 ```
 
 

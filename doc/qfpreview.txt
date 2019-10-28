@@ -47,6 +47,12 @@ gg          Jump to first line of displayed buffer.
                                                                  *qfpreview_G*
 G           Jump to bottom of displayed buffer.
 
+                                                                 *qfpreview_+*
++           Increase the height of the popup window by one line.
+
+                                                                 *qfpreview_-*
+-           Decrease the height of the popup window by one line.
+
 ==============================================================================
 MOUSE EVENTS                                                 *qfpreview-mouse*
 

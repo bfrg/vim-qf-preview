@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Oct 7, 2019
+" Last Change:  Oct 28, 2019
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -33,6 +33,7 @@ function! s:popup_filter(winid, key) abort
         return v:true
     elseif a:key ==# s:get('scrolldown')
         let line = popup_getoptions(a:winid).firstline
+        " TODO use line('$', a:winid) in the future, requires patch-8.1.1967
         call win_execute(a:winid, 'let g:nlines = line("$")')
         let newline = line < g:nlines ? (line + 2) : g:nlines
         unlet g:nlines
@@ -47,6 +48,15 @@ function! s:popup_filter(winid, key) abort
         let newline = g:nlines >= height ? g:nlines - height + 1 : 1
         call popup_setoptions(a:winid, #{firstline: newline})
         unlet g:nlines
+        return v:true
+    elseif a:key ==# '+'
+        let height = popup_getoptions(a:winid).minheight
+        call popup_setoptions(a:winid, #{minheight: height+1, maxheight: height+1})
+        return v:true
+    elseif a:key ==# '-'
+        let height = popup_getoptions(a:winid).minheight
+        let newheight = height - 1 > 0 ? height - 1 : 1
+        call popup_setoptions(a:winid, #{minheight: newheight, maxheight: newheight})
         return v:true
     elseif a:key ==# s:get('close')
         call popup_close(a:winid)
