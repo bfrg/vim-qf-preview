@@ -23,17 +23,24 @@ In the quickfix window navigate the cursor to the desired error and press
 window is scrolled such that the buffer line with the error is at the top of the
 window.
 
-Press <kbd>Ctrl-j</kbd> or <kbd>Ctrl-k</kbd> to scroll the popup window down
-or up, respectively.
+The following keys can be used while the popup window is visible:
 
-Pressing <kbd>gg</kbd> or <kbd>G</kbd> will scroll to the top or bottom of the
-displayed buffer, respectively.
+| Key               | Description                                 | Configuration           |
+| ----------------- | ------------------------------------------- | ----------------------- |
+| <kbd>Ctrl-k</kbd> | Scroll buffer up one text line.             | `qfpreview.scrollup`    |
+| <kbd>Ctrl-j</kbd> | Scroll buffer down one text line.           | `qfpreview.scrolldown`  |
+| <kbd>Ctrl-u</kbd> | Scroll buffer up one half page.             | `qfpreview.halfpageup`  |
+| <kbd>Ctrl-d</kbd> | Scroll buffer down one half page.           | `qfpreview.halfpagedown`|
+| <kbd>Ctrl-b</kbd> | Scroll buffer up one full page.             | `qfpreview.fullpageup`  |
+| <kbd>Ctrl-f</kbd> | Scroll buffer down one full page.           | `qfpreview.fullpagedown`|
+| <kbd>x</kbd>      | Close the popup window.                     | `qfpreview.close`       |
+| <kbd>g</kbd>      | Scroll to top of displayed buffer.          | -                       |
+| <kbd>G</kbd>      | Scroll to bottom of displayed buffer.       | -                       |
+| <kbd>+</kbd>      | Increase height of popup window by one line.| -                       |
+| <kbd>-</kbd>      | Decrease height of popup window by one line.| -                       |
 
-Press <kbd>x</kbd>, or move the cursor in any direction to close the popup
-window.
-
-The height of the popup window can be changed with <kbd>+</kbd> and
-<kbd>-</kbd>.
+**Note:** If your Vim is older than `8.1.1799` you will have to press
+<kbd>gg</kbd> to scroll to the top of the displayed buffer.
 
 
 ## Configuration
@@ -42,34 +49,24 @@ The height of the popup window can be changed with <kbd>+</kbd> and
 
 The default key mappings and the height of the popup window can be changed
 through the variable `b:qfpreview` in `after/ftplugin/qf.vim`, or alternatively
-through the global dictionary `g:qfpreview`. The following `Dictionary` keys are
-supported: `scrolldown`, `scrollup`, `close`, and `height`.
+through the global variable `g:qfpreview`. In addition to the `Dictionary` keys
+listed in the above table, the initial height of the popup window can be set
+through the `height` entry.
 
-Examples:
-
-- Scroll up with <kbd>Ctrl-y</kbd>, and scroll down with <kbd>Ctrl-e</kbd>:
-  ```vim
-  " in after/ftplugin/qf.vim
-  let b:qfpreview = #{scrolldown: "\<C-e>", scrollup: "\<C-y>"}
-  ```
-
-- Scroll up with <kbd>K</kbd>, and scroll down with <kbd>J</kbd>, close popup
-  window with <kbd>Esc</kbd>:
-  ```vim
-  " in after/ftplugin/qf.vim
-  let b:qfpreview = #{scrolldown: 'J', scrollup: 'K', close: "\<Esc>"}
-  ```
-
-- Show 20 text lines in the popup window:
-  ```vim
-  " in after/ftplugin/qf.vim
-  let b:qfpreview = #{height: 20}
-  ```
-
-- Alternatively you can also use a `global-variable` in your `vimrc`:
-  ```vim
-  let g:qfpreview = #{scrolldown: "\<C-e>", scrollup: "\<C-y>", close: "\<Esc>"}
-  ```
+Example:
+```vim
+" in vimrc
+let g:qfpreview = #{
+    \ scrollup: 'k',
+    \ scrolldown: 'j',
+    \ halfpageup: 'u',
+    \ halfpagedown: 'd',
+    \ fullpageup: 'b',
+    \ fullpagedown: 'f',
+    \ close: 'q',
+    \ height: 20
+    \ }
+```
 
 #### Highlighting
 

@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Oct 28, 2019
+" Last Change:  Oct 29, 2019
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -16,6 +16,10 @@ let s:defaults = #{
         \ height: 15,
         \ scrollup: "\<c-k>",
         \ scrolldown: "\<c-j>",
+        \ halfpageup: "\<c-u>",
+        \ halfpagedown: "\<c-d>",
+        \ fullpageup: "\<c-b>",
+        \ fullpagedown: "\<c-f>",
         \ close: 'x',
         \ mapping: v:false
         \ }
@@ -28,14 +32,14 @@ endfunction
 function! s:popup_filter(winid, key) abort
     if a:key ==# s:get('scrollup')
         let line = popup_getoptions(a:winid).firstline
-        let newline = (line - 2) > 0 ? (line - 2) : 1
+        let newline = (line - 1) > 0 ? (line - 1) : 1
         call popup_setoptions(a:winid, #{firstline: newline})
         return v:true
     elseif a:key ==# s:get('scrolldown')
         let line = popup_getoptions(a:winid).firstline
         " TODO use line('$', a:winid) in the future, requires patch-8.1.1967
         call win_execute(a:winid, 'let g:nlines = line("$")')
-        let newline = line < g:nlines ? (line + 2) : g:nlines
+        let newline = line < g:nlines ? (line + 1) : g:nlines
         unlet g:nlines
         call popup_setoptions(a:winid, #{firstline: newline})
         return v:true
@@ -48,6 +52,32 @@ function! s:popup_filter(winid, key) abort
         let newline = g:nlines >= height ? g:nlines - height + 1 : 1
         call popup_setoptions(a:winid, #{firstline: newline})
         unlet g:nlines
+        return v:true
+    elseif a:key ==# s:get('halfpageup')
+        let line = popup_getoptions(a:winid).firstline
+        let height = popup_getpos(a:winid).core_height
+        let newline = (line - height/2) > 0 ? (line - height/2) : 1
+        call popup_setoptions(a:winid, #{firstline: newline})
+        return v:true
+    elseif a:key ==# s:get('halfpagedown')
+        let line = popup_getoptions(a:winid).firstline
+        let nlines = line('$', a:winid)
+        let height = popup_getpos(a:winid).core_height
+        let newline = (line + height/2) <= nlines ? (line + height/2) : nlines
+        call popup_setoptions(a:winid, #{firstline: newline})
+        return v:true
+    elseif a:key ==# s:get('fullpageup')
+        let line = popup_getoptions(a:winid).firstline
+        let height = popup_getpos(a:winid).core_height
+        let newline = (line - height) > 0 ? (line - height) : 1
+        call popup_setoptions(a:winid, #{firstline: newline})
+        return v:true
+    elseif a:key ==# s:get('fullpagedown')
+        let line = popup_getoptions(a:winid).firstline
+        let nlines = line('$', a:winid)
+        let height = popup_getpos(a:winid).core_height
+        let newline = (line + height) <= nlines ? (line + height) : nlines
+        call popup_setoptions(a:winid, #{firstline: newline})
         return v:true
     elseif a:key ==# '+'
         let height = popup_getoptions(a:winid).minheight

@@ -21,28 +21,43 @@ close it. See also |qfpreview_close| mappings below.
 ==============================================================================
 MAPPINGS                                                  *qfpreview-mappings*
 
-                                                            *qfpreview_p*
+                                                                 *qfpreview_p*
 p           In the quickfix window navigate the cursor to the desired error
             and press "p" to open a popup window with the file containing the
             error. The window is scrolled such that the buffer line with the
             error is at the top of the window.
 
-                                                             *qfpreview_close*
                                                                  *qfpreview_x*
 x           Close the popup window.
-            Configurable, see |b:qfpreview.close| below.
+            Configurable, see |qfpreview.close| below.
 
                                                             *qfpreview_CTRL-J*
-CTRL-J      Scroll the popup window down 2 lines.
-            Configurable, see |b:qfpreview.scrolldown| below.
+CTRL-J      Scroll the popup window down one text line.
+            Configurable, see |qfpreview.scrolldown| below.
 
                                                             *qfpreview_CTRL-K*
-CTRL-K      Scroll the popup window up 2 lines.
-            Configurable, see |b:qfpreview.scrollup| below.
+CTRL-K      Scroll the popup window up one text line.
+            Configurable, see |qfpreview.scrollup| below.
+
+                                                            *qfpreview_CTRL-D*
+CTRL-D      Scroll the popup window down one half page.
+            Configurable, see |qfpreview.halfpagedown| below.
+
+                                                            *qfpreview_CTRL-U*
+CTRL-U      Scroll the popup window up one half page.
+            Configurable, see |qfpreview.halfpageup| below.
+
+                                                            *qfpreview_CTRL-F*
+CTRL-F      Scroll the popup window down one full page.
+            Configurable, see |qfpreview.fullpagedown| below.
+
+                                                            *qfpreview_CTRL-B*
+CTRL-B      Scroll the popup window up one full page.
+            Configurable, see |qfpreview.fullpageup| below.
 
                                                                 *qfpreview_gg*
 gg          Jump to first line of displayed buffer.
-            Note In Vim `8.1.1799` or above a single "g" press is sufficient.
+            Note: In Vim `8.1.1799` or above a single "g" press is sufficient.
 
                                                                  *qfpreview_G*
 G           Jump to bottom of displayed buffer.
@@ -61,7 +76,7 @@ the text to scroll up or down as one would expect. Click on "X" in the top
 right corner to close the window.
 
 ==============================================================================
-CONFIGURATION                                        *qfpreview-configuration*
+CONFIGURATION                                               *qfpreview-config*
 
 b:qfpreview                                          *b:qfpreview* *g:qfpreview*
 g:qfpreview
@@ -70,33 +85,51 @@ The default key mappings and the height of the popup window can be changed
 through the |buffer-variable| b:qfpreview in |qf.vim|, or through the
 |global-variable| g:qfpreview. The following |Dictionary| keys are supported:
 
-                                                           *b:qfpreview.close*
+                                                             *qfpreview.close*
     close           Key to press for closing the popup window.
-                    Type: |String|
                     Default: x
-
-                                                      *b:qfpreview.scrolldown*
+                                                        *qfpreview.scrolldown*
     scrolldown      Key to press for scrolling the text down.
-                    Type: |String|
                     Default: CTRL-J
-
-                                                        *b:qfpreview.scrollup*
+                                                          *qfpreview.scrollup*
     scrollup        Key to press for scrolling the text up.
-                    Type: |String|
                     Default: CTRL-K
-
-                                                          *b:qfpreview.height*
+                                                      *qfpreview.halfpagedown*
+    halfpagedown    Key to press for scrolling the popup window one half page
+                    down.
+                    Default: CTRL-D
+                                                        *qfpreview.halfpageup*
+    halfpageup      Key to press for scrolling the popup window one half page
+                    up.
+                    Default: CTRL-U
+                                                      *qfpreview.fullpagedown*
+    fullpagedown    Key to press for scrolling the popup window one full page
+                    down.
+                    Default: CTRL-F
+                                                        *qfpreview.fullpageup*
+    fullpageup      Key to press for scrolling the popup window one full page
+                    up.
+                    Default: CTRL-B
+                                                            *qfpreview.height*
     height          Number of text lines to display in the popup window.
-                    Type: |Number|
                     Default: 15
 
 Examples ~
 >
     " In your vimrc
-    let g:qfpreview = #{scrolldown: "\<C-e>", scrollup: "\<C-y>"}
+    let g:qfpreview = #{
+            \ scrolldown: 'j',
+            \ scrollup: 'k',
+            \ halfpagedown: 'd',
+            \ halfpageup: 'u',
+            \ fullpagedown: 'f',
+            \ fullpageup: 'b',
+            \ close: 'q',
+            \ height: 20
+            \ }
 
     " Or in after/ftplugin/qf.vim
-    let b:qfpreview = #{scrolldown: "\<C-e>", scrollup: "\<C-y>", height: 20}
+    let b:qfpreview = #{scrolldown: 'j', scrollup: 'k', height: 20}
 <
 
                                                          *qfpreview-highlight*
@@ -104,24 +137,24 @@ Highlight Groups ~
 
 The following highlighting groups are used by the plugin:
 
-                                                         *hl-QfPreview*
+                                                                *hl-QfPreview*
 QfPreview           Normal text in the popup window. This is the equivalent of
                     the |hl-Normal| highlight group in regular windows.
 
                     By default links to |hl-Pmenu|.
 
-                                                         *hl-QfPreviewTitle*
+                                                           *hl-QfPreviewTitle*
 QfPreviewTitle      Title (top line) of the popup window.
 
                     By default links to |hl-Pmenu|.
-                                                         *hl-QfPreviewScrollbar*
+                                                       *hl-QfPreviewScrollbar*
 
 QfPreviewScrollbar  Highlight group name for the |popup-scrollbar|. The
                     background color is what matters.
 
                     By default links to |hl-PmenuSbar|.
 
-                                                         *hl-QfPreviewThumb*
+                                                           *hl-QfPreviewThumb*
 QfPreviewThumb      Highlight group name for the |popup-scrollbar| thumb. The
                     background color is what matters.
 
