@@ -29,69 +29,53 @@ function! s:get(key) abort
     return has_key(var, a:key) ? var[a:key] : s:defaults[a:key]
 endfunction
 
+let s:keysmappings = {
+        \ 'g': {id -> popup_setoptions(id, #{firstline: 1})},
+        \ 'G': {id -> s:bottom(id)},
+        \ '+': {id -> s:setheight(id, 1)},
+        \ '-': {id -> s:setheight(id, -1)}
+        \ }
+
+let s:keysmappings[s:get('scrollup')]       = {id -> s:scroll_line(id, -1)}
+let s:keysmappings[s:get('scrolldown')]     = {id -> s:scroll_line(id, 1)}
+let s:keysmappings[s:get('halfpageup')]     = {id -> s:scroll_page(id, -0.5)}
+let s:keysmappings[s:get('halfpagedown')]   = {id -> s:scroll_page(id, 0.5)}
+let s:keysmappings[s:get('fullpageup')]     = {id -> s:scroll_page(id, -1)}
+let s:keysmappings[s:get('fullpagedown')]   = {id -> s:scroll_page(id, 1)}
+let s:keysmappings[s:get('close')]          = {id -> popup_close(id)}
+
+function! s:scroll_line(winid, step) abort
+    let line = popup_getoptions(a:winid).firstline
+    if a:step < 0
+        let newline = (line + a:step) > 0 ? (line + a:step) : 1
+    else
+        let nlines = line('$', a:winid)
+        let newline = (line + a:step) <= nlines ? (line + a:step) : nlines
+    endif
+    call popup_setoptions(a:winid, #{firstline: newline})
+endfunction
+
+function! s:scroll_page(winid, size) abort
+    let height = popup_getpos(a:winid).core_height
+    let step = float2nr(height*a:size)
+    call s:scroll_line(a:winid, step)
+endfunction
+
+function! s:bottom(winid) abort
+    let height = popup_getpos(a:winid).core_height
+    let nlines = line('$', a:winid)
+    let newline = (nlines - height) >= 0 ? (nlines - height + 1) : 1
+    call popup_setoptions(a:winid, #{firstline: newline})
+endfunction
+
+function! s:setheight(winid, step) abort
+    let height = popup_getoptions(a:winid).minheight
+    call popup_setoptions(a:winid, #{minheight: height + a:step, maxheight: height + a:step})
+endfunction
+
 function! s:popup_filter(winid, key) abort
-    if a:key ==# s:get('scrollup')
-        let line = popup_getoptions(a:winid).firstline
-        let newline = (line - 1) > 0 ? (line - 1) : 1
-        call popup_setoptions(a:winid, #{firstline: newline})
-        return v:true
-    elseif a:key ==# s:get('scrolldown')
-        let line = popup_getoptions(a:winid).firstline
-        " TODO use line('$', a:winid) in the future, requires patch-8.1.1967
-        call win_execute(a:winid, 'let g:nlines = line("$")')
-        let newline = line < g:nlines ? (line + 1) : g:nlines
-        unlet g:nlines
-        call popup_setoptions(a:winid, #{firstline: newline})
-        return v:true
-    elseif a:key ==# 'g'
-        call popup_setoptions(a:winid, #{firstline: 1})
-        return v:true
-    elseif a:key ==# 'G'
-        let height = popup_getpos(a:winid).core_height
-        call win_execute(a:winid, 'let g:nlines = line("$")')
-        let newline = g:nlines >= height ? g:nlines - height + 1 : 1
-        call popup_setoptions(a:winid, #{firstline: newline})
-        unlet g:nlines
-        return v:true
-    elseif a:key ==# s:get('halfpageup')
-        let line = popup_getoptions(a:winid).firstline
-        let height = popup_getpos(a:winid).core_height
-        let newline = (line - height/2) > 0 ? (line - height/2) : 1
-        call popup_setoptions(a:winid, #{firstline: newline})
-        return v:true
-    elseif a:key ==# s:get('halfpagedown')
-        let line = popup_getoptions(a:winid).firstline
-        let nlines = line('$', a:winid)
-        let height = popup_getpos(a:winid).core_height
-        let newline = (line + height/2) <= nlines ? (line + height/2) : nlines
-        call popup_setoptions(a:winid, #{firstline: newline})
-        return v:true
-    elseif a:key ==# s:get('fullpageup')
-        let line = popup_getoptions(a:winid).firstline
-        let height = popup_getpos(a:winid).core_height
-        let newline = (line - height) > 0 ? (line - height) : 1
-        call popup_setoptions(a:winid, #{firstline: newline})
-        return v:true
-    elseif a:key ==# s:get('fullpagedown')
-        let line = popup_getoptions(a:winid).firstline
-        let nlines = line('$', a:winid)
-        let height = popup_getpos(a:winid).core_height
-        let newline = (line + height) <= nlines ? (line + height) : nlines
-        call popup_setoptions(a:winid, #{firstline: newline})
-        return v:true
-    elseif a:key ==# '+'
-        let height = popup_getoptions(a:winid).minheight
-        call popup_setoptions(a:winid, #{minheight: height+1, maxheight: height+1})
-        return v:true
-    elseif a:key ==# '-'
-        let height = popup_getoptions(a:winid).minheight
-        let newheight = height - 1 > 0 ? height - 1 : 1
-        call popup_setoptions(a:winid, #{minheight: newheight, maxheight: newheight})
-        return v:true
-    elseif a:key ==# s:get('close')
-        call popup_close(a:winid)
-        return v:true
-    elseif a:key ==# 'p'
+    if has_key(s:keysmappings, a:key)
+        call get(s:keysmappings, a:key)(a:winid)
         return v:true
     endif
     return v:false
