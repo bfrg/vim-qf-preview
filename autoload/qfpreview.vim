@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Oct 29, 2019
+" Last Change:  Nov 1, 2019
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -49,8 +49,10 @@ function! s:scroll_line(winid, step) abort
     if a:step < 0
         let newline = (line + a:step) > 0 ? (line + a:step) : 1
     else
-        let nlines = line('$', a:winid)
-        let newline = (line + a:step) <= nlines ? (line + a:step) : nlines
+        " TODO use line('$', a:winid) in the future, requires patch-8.1.1967
+        call win_execute(a:winid, 'let g:nlines = line("$")')
+        let newline = (line + a:step) <= g:nlines ? (line + a:step) : g:nlines
+        unlet g:nlines
     endif
     call popup_setoptions(a:winid, #{firstline: newline})
 endfunction
@@ -63,8 +65,9 @@ endfunction
 
 function! s:bottom(winid) abort
     let height = popup_getpos(a:winid).core_height
-    let nlines = line('$', a:winid)
-    let newline = (nlines - height) >= 0 ? (nlines - height + 1) : 1
+    call win_execute(a:winid, 'let g:nlines = line("$")')
+    let newline = (g:nlines - height) >= 0 ? (g:nlines - height + 1) : 1
+    unlet g:nlines
     call popup_setoptions(a:winid, #{firstline: newline})
 endfunction
 
