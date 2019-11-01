@@ -174,6 +174,10 @@ function! qfpreview#open(idx) abort
         call extend(opts, #{mapping: s:get('mapping')})
     endif
 
+    if has('patch-8.1.1969')
+        call extend(opts, #{filtermode: 'n'})
+    endif
+
     hi def link QfPreview Pmenu
     hi def link QfPreviewTitle Pmenu
     hi def link QfPreviewScrollbar PmenuSbar
