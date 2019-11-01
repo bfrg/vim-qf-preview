@@ -153,7 +153,7 @@ function! qfpreview#open(idx) abort
             \ maxheight: height,
             \ minwidth: wininfo.width - 3,
             \ maxwidth: wininfo.width - 3,
-            \ firstline: qfitem.lnum,
+            \ firstline: qfitem.lnum < 1 ? 1 : qfitem.lnum,
             \ title: title,
             \ close: 'button',
             \ padding: [0,1,1,1],
