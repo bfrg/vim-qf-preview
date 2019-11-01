@@ -96,6 +96,11 @@ function! qfpreview#open(idx) abort
     let wininfo = getwininfo(win_getid())[0]
     let qflist = wininfo.loclist ? getloclist(0) : getqflist()
     let qfitem = qflist[a:idx]
+
+    if !qfitem.valid
+        return
+    endif
+
     let height = s:get('height')
     let title = printf('%s (%d/%d)', bufname(qfitem.bufnr), a:idx+1, len(qflist))
 
