@@ -29,20 +29,20 @@ function! s:get(key) abort
     return has_key(var, a:key) ? var[a:key] : s:defaults[a:key]
 endfunction
 
-let s:keysmappings = {
+let s:mappings = {
         \ 'g': {id -> popup_setoptions(id, #{firstline: 1})},
         \ 'G': {id -> s:bottom(id)},
         \ '+': {id -> s:setheight(id, 1)},
         \ '-': {id -> s:setheight(id, -1)}
         \ }
 
-let s:keysmappings[s:get('scrollup')]       = {id -> s:scroll_line(id, -1)}
-let s:keysmappings[s:get('scrolldown')]     = {id -> s:scroll_line(id, 1)}
-let s:keysmappings[s:get('halfpageup')]     = {id -> s:scroll_page(id, -0.5)}
-let s:keysmappings[s:get('halfpagedown')]   = {id -> s:scroll_page(id, 0.5)}
-let s:keysmappings[s:get('fullpageup')]     = {id -> s:scroll_page(id, -1)}
-let s:keysmappings[s:get('fullpagedown')]   = {id -> s:scroll_page(id, 1)}
-let s:keysmappings[s:get('close')]          = {id -> popup_close(id)}
+let s:mappings[s:get('scrollup')]     = {id -> s:scroll_line(id, -1)}
+let s:mappings[s:get('scrolldown')]   = {id -> s:scroll_line(id, 1)}
+let s:mappings[s:get('halfpageup')]   = {id -> s:scroll_page(id, -0.5)}
+let s:mappings[s:get('halfpagedown')] = {id -> s:scroll_page(id, 0.5)}
+let s:mappings[s:get('fullpageup')]   = {id -> s:scroll_page(id, -1)}
+let s:mappings[s:get('fullpagedown')] = {id -> s:scroll_page(id, 1)}
+let s:mappings[s:get('close')]        = {id -> popup_close(id)}
 
 function! s:scroll_line(winid, step) abort
     let line = popup_getoptions(a:winid).firstline
@@ -73,12 +73,15 @@ endfunction
 
 function! s:setheight(winid, step) abort
     let height = popup_getoptions(a:winid).minheight
-    call popup_setoptions(a:winid, #{minheight: height + a:step, maxheight: height + a:step})
+    call popup_setoptions(a:winid, #{
+            \ minheight: height + a:step,
+            \ maxheight: height + a:step
+            \ })
 endfunction
 
 function! s:popup_filter(winid, key) abort
-    if has_key(s:keysmappings, a:key)
-        call get(s:keysmappings, a:key)(a:winid)
+    if has_key(s:mappings, a:key)
+        call get(s:mappings, a:key)(a:winid)
         return v:true
     endif
     return v:false
