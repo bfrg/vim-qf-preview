@@ -73,10 +73,8 @@ endfunction
 
 function! s:setheight(winid, step) abort
     let height = popup_getoptions(a:winid).minheight
-    call popup_setoptions(a:winid, #{
-            \ minheight: height + a:step,
-            \ maxheight: height + a:step
-            \ })
+    let newheight = height + a:step > 0 ? height + a:step : 1
+    call popup_setoptions(a:winid, #{minheight: newheight, maxheight: newheight})
 endfunction
 
 function! s:popup_filter(winid, key) abort
