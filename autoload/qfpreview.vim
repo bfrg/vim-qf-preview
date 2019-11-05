@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Nov 1, 2019
+" Last Change:  Nov 5, 2019
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -176,6 +176,13 @@ function! qfpreview#open(idx) abort
 
     if has('patch-8.1.1969')
         call extend(opts, #{filtermode: 'n'})
+    endif
+
+    if has('patch-8.1.2240')
+        call extend(opts, #{
+                \ minwidth: wininfo.width - 1,
+                \ maxwidth: wininfo.width - 1,
+                \ })
     endif
 
     hi def link QfPreview Pmenu
