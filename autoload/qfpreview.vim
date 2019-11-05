@@ -157,7 +157,7 @@ function! qfpreview#open(idx) abort
             \ border: [1,0,0,0],
             \ borderchars: [' '],
             \ moved: 'any',
-            \ filter: function('s:popup_filter'),
+            \ filter: funcref('s:popup_filter'),
             \ highlight: 'QfPreview',
             \ borderhighlight: ['QfPreviewTitle'],
             \ scrollbarhighlight: 'QfPreviewScrollbar',
