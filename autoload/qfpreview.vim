@@ -31,44 +31,23 @@ endfunction
 
 let s:mappings = {
         \ 'g': {id -> popup_setoptions(id, #{firstline: 1})},
-        \ 'G': {id -> s:bottom(id)},
+        \ 'G': {id -> s:scroll(id, 'G')},
         \ '+': {id -> s:setheight(id, 1)},
         \ '-': {id -> s:setheight(id, -1)}
         \ }
 
-let s:mappings[s:get('scrollup')]     = {id -> s:scroll_line(id, -1)}
-let s:mappings[s:get('scrolldown')]   = {id -> s:scroll_line(id, 1)}
-let s:mappings[s:get('halfpageup')]   = {id -> s:scroll_page(id, -0.5)}
-let s:mappings[s:get('halfpagedown')] = {id -> s:scroll_page(id, 0.5)}
-let s:mappings[s:get('fullpageup')]   = {id -> s:scroll_page(id, -1)}
-let s:mappings[s:get('fullpagedown')] = {id -> s:scroll_page(id, 1)}
+let s:mappings[s:get('scrollup')]     = {id -> s:scroll(id, "\<c-y>")}
+let s:mappings[s:get('scrolldown')]   = {id -> s:scroll(id, "\<c-e>")}
+let s:mappings[s:get('halfpageup')]   = {id -> s:scroll(id, "\<c-u>")}
+let s:mappings[s:get('halfpagedown')] = {id -> s:scroll(id, "\<c-d>")}
+let s:mappings[s:get('fullpageup')]   = {id -> s:scroll(id, "\<c-b>")}
+let s:mappings[s:get('fullpagedown')] = {id -> s:scroll(id, "\<c-f>")}
 let s:mappings[s:get('close')]        = {id -> popup_close(id)}
 
-function! s:scroll_line(winid, step) abort
-    let line = popup_getoptions(a:winid).firstline
-    if a:step < 0
-        let newline = (line + a:step) > 0 ? (line + a:step) : 1
-    else
-        " TODO use line('$', a:winid) in the future, requires patch-8.1.1967
-        call win_execute(a:winid, 'let g:nlines = line("$")')
-        let newline = (line + a:step) <= g:nlines ? (line + a:step) : g:nlines
-        unlet g:nlines
-    endif
-    call popup_setoptions(a:winid, #{firstline: newline})
-endfunction
-
-function! s:scroll_page(winid, size) abort
-    let height = popup_getpos(a:winid).core_height
-    let step = float2nr(height*a:size)
-    call s:scroll_line(a:winid, step)
-endfunction
-
-function! s:bottom(winid) abort
-    let height = popup_getpos(a:winid).core_height
-    call win_execute(a:winid, 'let g:nlines = line("$")')
-    let newline = (g:nlines - height) >= 0 ? (g:nlines - height + 1) : 1
-    unlet g:nlines
-    call popup_setoptions(a:winid, #{firstline: newline})
+function! s:scroll(winid, cmd) abort
+    call win_execute(a:winid, 'normal! ' .. a:cmd)
+    let firstline = popup_getpos(a:winid).firstline
+    call popup_setoptions(a:winid, #{firstline: firstline})
 endfunction
 
 function! s:setheight(winid, step) abort
@@ -146,8 +125,8 @@ function! qfpreview#open(idx) abort
             \ col: wininfo.wincol,
             \ minheight: height,
             \ maxheight: height,
-            \ minwidth: wininfo.width - 3,
-            \ maxwidth: wininfo.width - 3,
+            \ minwidth: wininfo.width - 1,
+            \ maxwidth: wininfo.width - 1,
             \ firstline: qfitem.lnum < 1 ? 1 : qfitem.lnum,
             \ title: title,
             \ close: 'button',
@@ -155,46 +134,21 @@ function! qfpreview#open(idx) abort
             \ border: [1,0,0,0],
             \ borderchars: [' '],
             \ moved: 'any',
+            \ mapping: s:get('mapping'),
             \ filter: funcref('s:popup_filter'),
+            \ filtermode: 'n',
             \ highlight: 'QfPreview',
             \ borderhighlight: ['QfPreviewTitle'],
             \ scrollbarhighlight: 'QfPreviewScrollbar',
             \ thumbhighlight: 'QfPreviewThumb'
             \ })
 
-    if has('patch-8.1.1799')
-        call extend(opts, #{mapping: s:get('mapping')})
-    endif
-
-    if has('patch-8.1.1969')
-        call extend(opts, #{filtermode: 'n'})
-    endif
-
-    if has('patch-8.1.2240')
-        call extend(opts, #{
-                \ minwidth: wininfo.width - 1,
-                \ maxwidth: wininfo.width - 1,
-                \ })
-    endif
-
     hi def link QfPreview Pmenu
     hi def link QfPreviewTitle Pmenu
     hi def link QfPreviewScrollbar PmenuSbar
     hi def link QfPreviewThumb PmenuThumb
 
-    silent let winid = popup_create(qfitem.bufnr, opts)
-
-    if !has('patch-8.1.1919')
-        call setwinvar(winid, '&number', 0)
-        call setwinvar(winid, '&relativenumber', 0)
-        call setwinvar(winid, '&cursorline', 0)
-        call setwinvar(winid, '&signcolumn', 'no')
-        call setwinvar(winid, '&cursorcolumn', 0)
-        call setwinvar(winid, '&foldcolumn', 0)
-        call setwinvar(winid, '&colorcolumn', '')
-        call setwinvar(winid, '&list', 0)
-        call setwinvar(winid, '&scrolloff', 0)
-    endif
+    silent call popup_create(qfitem.bufnr, opts)
 endfunction
 
 let &cpoptions = s:save_cpo

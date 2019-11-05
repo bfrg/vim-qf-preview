@@ -73,9 +73,8 @@ CTRL-F      Scroll the popup window down one full page.
 CTRL-B      Scroll the popup window up one full page.
             Configurable, see |qfpreview.fullpageup| below.
 
-                                                                *qfpreview_gg*
-gg          Jump to first line of displayed buffer.
-            Note: In Vim `8.1.1799` or above a single "g" press is sufficient.
+                                                                 *qfpreview_g*
+g           Jump to first line of displayed buffer.
 
                                                                  *qfpreview_G*
 G           Jump to bottom of displayed buffer.

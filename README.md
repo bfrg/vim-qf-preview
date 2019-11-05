@@ -3,7 +3,7 @@
 A plugin for the quickfix and location list windows to quickly preview the file
 with the quickfix item under the cursor in a popup window.
 
-**Note:** Plugin requires at least Vim `8.1.1705`.
+**Note:** Plugin requires at least Vim `8.1.2250`.
 
 <dl>
   <p align="center">
@@ -61,9 +61,6 @@ The following keys can be used while the popup window is visible:
 | <kbd>+</kbd>      | Increase height of popup window by one line.| -                       |
 | <kbd>-</kbd>      | Decrease height of popup window by one line.| -                       |
 
-**Note:** If your Vim is older than `8.1.1799` you will have to press
-<kbd>gg</kbd> to scroll to the top of the displayed buffer.
-
 
 ## Configuration
 
@@ -115,7 +112,7 @@ name. For more details see `:help packages`.
 Assuming [vim-plug](https://github.com/junegunn/vim-plug) is your favorite
 plugin manager, add the following to your `vimrc`:
 ```vim
-if has('patch-8.1.1705')
+if has('patch-8.1.2250')
     Plug 'bfrg/vim-qf-preview'
 endif
 ```
