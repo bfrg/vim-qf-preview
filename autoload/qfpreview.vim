@@ -87,18 +87,12 @@ function! s:popup_filter(winid, key) abort
     return v:false
 endfunction
 
-function! s:space_above(wininfo) abort
-    return a:wininfo.winrow - 1
-endfunction
-
-function! s:space_below(wininfo) abort
-    return &lines - (a:wininfo.winrow + a:wininfo.height - 1) - &cmdheight
-endfunction
-
 function! qfpreview#open(idx) abort
     let wininfo = getwininfo(win_getid())[0]
     let qflist = wininfo.loclist ? getloclist(0) : getqflist()
     let qfitem = qflist[a:idx]
+    let space_above = wininfo.winrow - 1
+    let space_below = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
 
     if !qfitem.valid
         return
@@ -113,32 +107,32 @@ function! qfpreview#open(idx) abort
         let title = '…' . title[-width:]
     endif
 
-    if s:space_above(wininfo) > height
-        if s:space_above(wininfo) == height + 1
+    if space_above > height
+        if space_above == height + 1
             let height = height - 1
         endif
         let opts = #{
                 \ line: wininfo.winrow - 1,
                 \ pos: 'botleft'
                 \ }
-    elseif s:space_below(wininfo) >= height
+    elseif space_below >= height
         let opts = #{
                 \ line: wininfo.winrow + wininfo.height,
                 \ pos: 'topleft'
                 \ }
-    elseif s:space_above(wininfo) > 5
-        let height = s:space_above(wininfo) - 2
+    elseif space_above > 5
+        let height = space_above - 2
         let opts = #{
                 \ line: wininfo.winrow - 1,
                 \ pos: 'botleft'
                 \ }
-    elseif s:space_below(wininfo) > 5
-        let height = s:space_below(wininfo) - 2
+    elseif space_below > 5
+        let height = space_below - 2
         let opts = #{
                 \ line: wininfo.winrow + wininfo.height,
                 \ pos: 'topleft'
                 \ }
-    elseif s:space_above(wininfo) <= 5 || s:space_below(wininfo) <= 5
+    elseif space_above <= 5 || space_below <= 5
         let opts = #{
                 \ line: &lines - &cmdheight,
                 \ pos: 'botleft'
