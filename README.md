@@ -25,19 +25,20 @@ window.
 
 The following keys can be used while the popup window is visible:
 
-| Key               | Description                                 | Configuration           |
-| ----------------- | ------------------------------------------- | ----------------------- |
-| <kbd>Ctrl-k</kbd> | Scroll buffer up one text line.             | `qfpreview.scrollup`    |
-| <kbd>Ctrl-j</kbd> | Scroll buffer down one text line.           | `qfpreview.scrolldown`  |
-| <kbd>Ctrl-u</kbd> | Scroll buffer up one half page.             | `qfpreview.halfpageup`  |
-| <kbd>Ctrl-d</kbd> | Scroll buffer down one half page.           | `qfpreview.halfpagedown`|
-| <kbd>Ctrl-b</kbd> | Scroll buffer up one full page.             | `qfpreview.fullpageup`  |
-| <kbd>Ctrl-f</kbd> | Scroll buffer down one full page.           | `qfpreview.fullpagedown`|
-| <kbd>x</kbd>      | Close the popup window.                     | `qfpreview.close`       |
-| <kbd>g</kbd>      | Scroll to top of displayed buffer.          | -                       |
-| <kbd>G</kbd>      | Scroll to bottom of displayed buffer.       | -                       |
-| <kbd>+</kbd>      | Increase height of popup window by one line.| -                       |
-| <kbd>-</kbd>      | Decrease height of popup window by one line.| -                       |
+| Key               | Description                                  | Configuration            |
+| ----------------- | -------------------------------------------  | -----------------------  |
+| <kbd>p</kbd>      | Start preview at popup.                      | `qfpreview.preview`      |
+| <kbd>Ctrl-k</kbd> | Scroll buffer up one text line.              | `qfpreview.scrollup`     |
+| <kbd>Ctrl-j</kbd> | Scroll buffer down one text line.            | `qfpreview.scrolldown`   |
+| <kbd>Ctrl-u</kbd> | Scroll buffer up one half page.              | `qfpreview.halfpageup`   |
+| <kbd>Ctrl-d</kbd> | Scroll buffer down one half page.            | `qfpreview.halfpagedown` |
+| <kbd>Ctrl-b</kbd> | Scroll buffer up one full page.              | `qfpreview.fullpageup`   |
+| <kbd>Ctrl-f</kbd> | Scroll buffer down one full page.            | `qfpreview.fullpagedown` |
+| <kbd>x</kbd>      | Close the popup window.                      | `qfpreview.close`        |
+| <kbd>g</kbd>      | Scroll to top of displayed buffer.           | -                        |
+| <kbd>G</kbd>      | Scroll to bottom of displayed buffer.        | -                        |
+| <kbd>+</kbd>      | Increase height of popup window by one line. | -                        |
+| <kbd>-</kbd>      | Decrease height of popup window by one line. | -                        |
 
 **Note:** If your Vim is older than `8.1.1799` you will have to press
 <kbd>gg</kbd> to scroll to the top of the displayed buffer.
@@ -57,6 +58,7 @@ Example:
 ```vim
 " in vimrc
 let g:qfpreview = #{
+    \ preview: '<C-p>',
     \ scrollup: 'k',
     \ scrolldown: 'j',
     \ halfpageup: 'u',

@@ -15,9 +15,19 @@ if exists('g:no_plugin_maps') || !has('patch-8.1.1705')
     finish
 endif
 
-nnoremap <silent> <buffer> p :<c-u>call qfpreview#open(line('.')-1)<cr>
+let s:var = get(b:, 'qfpreview', get(g:, 'qfpreview', {}))
+if has_key(s:var, 'preview')
+  let s:key = s:var['preview']
+else
+  let s:key = 'p'
+endif
 
-let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'execute') . '| execute "nunmap <buffer> p"'
+execute 'nnoremap <silent> <buffer> ' . s:key . ' :<c-u>call qfpreview#open(line(".")-1)<cr>'
+
+let b:undo_ftplugin = get(b:, 'undo_ftplugin', 'execute') . '| execute "nunmap <buffer> ' . s:key . '"'
+
+unlet s:var
+unlet s:key
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
