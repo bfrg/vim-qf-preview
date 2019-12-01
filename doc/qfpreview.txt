@@ -21,12 +21,14 @@ close it. See also |qfpreview_close| mappings below.
 ==============================================================================
 MAPPINGS                                                  *qfpreview-mappings*
 
-                                                                 *qfpreview_p*
-p           In the quickfix window navigate the cursor to the desired error
+                                                    *<plug>(qf-preview-open)*
+p(or any)   In the quickfix window navigate the cursor to the desired error
             and press "p" to open a popup window with the file containing the
             error. The window is scrolled such that the buffer line with the
             error is at the top of the window.
-            Configurable, see |qfpreview.preview| below.
+            <plug>(qf-preview-open) is defined per QuickFix Buffer create time.
+            You need keymap per QuickFix Buffer create time and undo_ftplugin
+            set. Configuration see below.
 
                                                                  *qfpreview_x*
 x           Close the popup window.
@@ -86,9 +88,6 @@ The default key mappings and the height of the popup window can be changed
 through the |buffer-variable| b:qfpreview in |qf.vim|, or through the
 |global-variable| g:qfpreview. The following |Dictionary| keys are supported:
 
-                                                             *qfpreview.preview*
-    preview         Key to press for start prevew popup window.
-                    Default: p
                                                              *qfpreview.close*
     close           Key to press for closing the popup window.
                     Default: x
@@ -121,8 +120,14 @@ through the |buffer-variable| b:qfpreview in |qf.vim|, or through the
 Examples ~
 >
     " In your vimrc
+    augroup vimrc_qf_preview
+      autocmd!
+      autocmd FileType qf nmap <buffer> p <plug>(qf-preview-open)
+      autocmd FileType qf let b:undo_ftplugin .= ' | execute "nunmap <buffer> p"'
+      " <plug>(qf-preview-open) is defined per QuickFix Buffer create time.
+      " you need keymap per QuickFix Buffer create time and undo_ftpluing set.
+    augroup END
     let g:qfpreview = #{
-            \ preview: '<C-p>',
             \ scrolldown: 'j',
             \ scrollup: 'k',
             \ halfpagedown: 'd',
@@ -134,6 +139,10 @@ Examples ~
             \ }
 
     " Or in after/ftplugin/qf.vim
+    nmap <buffer> p <plug>(qf-preview-open)
+    let b:undo_ftplugin .= ' | execute "nunmap <buffer> <c-p>"'
+    " <plug>(qf-preview-open) is defined per QuickFix Buffer create time.
+    " you need keymap per QuickFix Buffer create time and undo_ftpluing set.
     let b:qfpreview = #{scrolldown: 'j', scrollup: 'k', height: 20}
 <
 

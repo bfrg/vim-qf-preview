@@ -19,26 +19,28 @@ The popup window will always have the same width as the quickfix window.
 ## Usage
 
 In the quickfix window navigate the cursor to the desired error and press
-<kbd>p</kbd> to open a popup window with the file containing the error. The
+<kbd>p(or any)</kbd> to open a popup window with the file containing the error. The
 window is scrolled such that the buffer line with the error is at the top of the
 window.
+`<plug>(qf-preview-open)` is defined per QuickFix Buffer create time.
+You need keymap per QuickFix Buffer create time and `undo_ftplugin` set.
+Configuration see below.
 
 The following keys can be used while the popup window is visible:
 
-| Key               | Description                                  | Configuration            |
-| ----------------- | -------------------------------------------  | -----------------------  |
-| <kbd>p</kbd>      | Start preview at popup.                      | `qfpreview.preview`      |
-| <kbd>Ctrl-k</kbd> | Scroll buffer up one text line.              | `qfpreview.scrollup`     |
-| <kbd>Ctrl-j</kbd> | Scroll buffer down one text line.            | `qfpreview.scrolldown`   |
-| <kbd>Ctrl-u</kbd> | Scroll buffer up one half page.              | `qfpreview.halfpageup`   |
-| <kbd>Ctrl-d</kbd> | Scroll buffer down one half page.            | `qfpreview.halfpagedown` |
-| <kbd>Ctrl-b</kbd> | Scroll buffer up one full page.              | `qfpreview.fullpageup`   |
-| <kbd>Ctrl-f</kbd> | Scroll buffer down one full page.            | `qfpreview.fullpagedown` |
-| <kbd>x</kbd>      | Close the popup window.                      | `qfpreview.close`        |
-| <kbd>g</kbd>      | Scroll to top of displayed buffer.           | -                        |
-| <kbd>G</kbd>      | Scroll to bottom of displayed buffer.        | -                        |
-| <kbd>+</kbd>      | Increase height of popup window by one line. | -                        |
-| <kbd>-</kbd>      | Decrease height of popup window by one line. | -                        |
+| Key               | Description                                 | Configuration           |
+| ----------------- | ------------------------------------------- | ----------------------- |
+| <kbd>Ctrl-k</kbd> | Scroll buffer up one text line.             | `qfpreview.scrollup`    |
+| <kbd>Ctrl-j</kbd> | Scroll buffer down one text line.           | `qfpreview.scrolldown`  |
+| <kbd>Ctrl-u</kbd> | Scroll buffer up one half page.             | `qfpreview.halfpageup`  |
+| <kbd>Ctrl-d</kbd> | Scroll buffer down one half page.           | `qfpreview.halfpagedown`|
+| <kbd>Ctrl-b</kbd> | Scroll buffer up one full page.             | `qfpreview.fullpageup`  |
+| <kbd>Ctrl-f</kbd> | Scroll buffer down one full page.           | `qfpreview.fullpagedown`|
+| <kbd>x</kbd>      | Close the popup window.                     | `qfpreview.close`       |
+| <kbd>g</kbd>      | Scroll to top of displayed buffer.          | -                       |
+| <kbd>G</kbd>      | Scroll to bottom of displayed buffer.       | -                       |
+| <kbd>+</kbd>      | Increase height of popup window by one line.| -                       |
+| <kbd>-</kbd>      | Decrease height of popup window by one line.| -                       |
 
 **Note:** If your Vim is older than `8.1.1799` you will have to press
 <kbd>gg</kbd> to scroll to the top of the displayed buffer.
@@ -46,7 +48,30 @@ The following keys can be used while the popup window is visible:
 
 ## Configuration
 
-#### b:qfpreview and g:qfpreview
+### Preview start
+
+Preview start need as you configure.
+
+This method is two way:
+
+```vim
+" in .vimrc
+augroup vimrc_qf_preview
+  autocmd!
+  autocmd FileType qf nmap <buffer> p <plug>(qf-preview-open)
+  autocmd FileType qf let b:undo_ftplugin .= ' | execute "nunmap <buffer> p"'
+augroup END
+```
+
+or
+
+```vim
+" in after/ftplugin/qf.vim
+nmap <buffer> p <plug>(qf-preview-open)
+let b:undo_ftplugin .= ' | execute "nunmap <buffer> <c-p>"'
+```
+
+### b:qfpreview and g:qfpreview
 
 The default key mappings and the height of the popup window can be changed
 through the variable `b:qfpreview` in `after/ftplugin/qf.vim`, or alternatively
@@ -58,7 +83,6 @@ Example:
 ```vim
 " in vimrc
 let g:qfpreview = #{
-    \ preview: '<C-p>',
     \ scrollup: 'k',
     \ scrolldown: 'j',
     \ halfpageup: 'u',
@@ -70,7 +94,7 @@ let g:qfpreview = #{
     \ }
 ```
 
-#### Highlighting
+### Highlighting
 
 The appearance of the popup window can be configured through the highlighting
 groups `QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar` and `QfPreviewThumb`.
@@ -79,7 +103,7 @@ See `:help qfpreview-highlight` for more details.
 
 ## Installation
 
-#### Manual Installation
+### Manual Installation
 
 Run the following commands in your terminal:
 ```
@@ -90,7 +114,7 @@ $ vim -u NONE -c "helptags vim-qf-preview/doc" -c q
 **Note:** The directory name `git-plugins` is arbitrary, you can pick any other
 name. For more details see `:help packages`.
 
-#### Plugin Managers
+### Plugin Managers
 
 Assuming [vim-plug](https://github.com/junegunn/vim-plug) is your favorite
 plugin manager, add the following to your `.vimrc`:
