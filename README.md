@@ -18,13 +18,32 @@ The popup window will always have the same width as the quickfix window.
 
 ## Usage
 
-In the quickfix window navigate the cursor to the desired error and press
-<kbd>p(or any)</kbd> to open a popup window with the file containing the error. The
+### Quickfix window mapping
+
+To avoid conflicts with other plugins no default key mappings for opening the
+popup window are provided. You will first have to bind `<plug>(qf-preview-open)`
+to a key-sequence of your choice.
+
+For example, to open the popup window with <kbd>p</kbd>, add the following to
+`~/.vim/after/ftplugin/qf.vim`:
+```vim
+nmap <buffer> p <plug>(qf-preview-open)
+```
+
+Or alternatively, if you prefer to keep your plugin settings in your `vimrc`:
+```vim
+augroup qfpreview
+  autocmd!
+  autocmd FileType qf nmap <buffer> p <plug>(qf-preview-open)
+augroup END
+```
+
+Now navigate the cursor in the quickfix window to the desired error and press
+<kbd>p</kbd> to open a popup window with the file containing the error. The
 window is scrolled such that the buffer line with the error is at the top of the
-window.
-`<plug>(qf-preview-open)` is defined per QuickFix Buffer create time.
-You need keymap per QuickFix Buffer create time and `undo_ftplugin` set.
-Configuration see below.
+popup window.
+
+### Popup window mappings
 
 The following keys can be used while the popup window is visible:
 
@@ -48,32 +67,9 @@ The following keys can be used while the popup window is visible:
 
 ## Configuration
 
-### Preview start
-
-Preview start need as you configure.
-
-This method is two way:
-
-```vim
-" in .vimrc
-augroup vimrc_qf_preview
-  autocmd!
-  autocmd FileType qf nmap <buffer> p <plug>(qf-preview-open)
-  autocmd FileType qf let b:undo_ftplugin .= ' | execute "nunmap <buffer> p"'
-augroup END
-```
-
-or
-
-```vim
-" in after/ftplugin/qf.vim
-nmap <buffer> p <plug>(qf-preview-open)
-let b:undo_ftplugin .= ' | execute "nunmap <buffer> <c-p>"'
-```
-
 ### b:qfpreview and g:qfpreview
 
-The default key mappings and the height of the popup window can be changed
+The default popup key mappings and the height of the popup window can be changed
 through the variable `b:qfpreview` in `after/ftplugin/qf.vim`, or alternatively
 through the global variable `g:qfpreview`. In addition to the `Dictionary` keys
 listed in the above table, the initial height of the popup window can be set
@@ -106,7 +102,7 @@ See `:help qfpreview-highlight` for more details.
 ### Manual Installation
 
 Run the following commands in your terminal:
-```
+```bash
 $ cd ~/.vim/pack/git-plugins/start
 $ git clone https://github.com/bfrg/vim-qf-preview
 $ vim -u NONE -c "helptags vim-qf-preview/doc" -c q
@@ -117,7 +113,7 @@ name. For more details see `:help packages`.
 ### Plugin Managers
 
 Assuming [vim-plug](https://github.com/junegunn/vim-plug) is your favorite
-plugin manager, add the following to your `.vimrc`:
+plugin manager, add the following to your `vimrc`:
 ```vim
 if has('patch-8.1.1705')
     Plug 'bfrg/vim-qf-preview'
