@@ -21,12 +21,30 @@ close it. See also |qfpreview_close| mappings below.
 ==============================================================================
 MAPPINGS                                                  *qfpreview-mappings*
 
-                                                                 *qfpreview_p*
-p           In the quickfix window navigate the cursor to the desired error
-            and press "p" to open a popup window with the file containing the
-            error. The window is scrolled such that the buffer line with the
-            error is at the top of the window.
+Quickfix window ~
 
+<plug>(qf-preview-open)                              *<plug>(qf-preview-open)*
+            Open a popup window with the file containing the quickfix error
+            the cursor is currently on. The window will be scrolled such that
+            the buffer line with the error is at the top of the popup window.
+
+            Note: To avoid conflicts with other plugins, the key mapping is
+            not bound to any key-sequence by default. You will first have to
+            bind <plug>(qf-preview-open) to a key of your choice.
+
+            For example, to open the popup window with "p", add the following
+            to |qf.vim|: >
+                " in ~/.vim/after/ftplugin/qf.vim
+                nmap <buffer> p <plug>(qf-preview-open)
+<
+            Or alternatively, if you prefer to keep your plugin settings in
+            your |vimrc|: >
+                augroup qfpreview
+                  autocmd!
+                  autocmd! FileType qf nmap <buffer> p <plug>(qf-preview-open)
+                augroup END
+<
+Popup window ~
                                                                  *qfpreview_x*
 x           Close the popup window.
             Configurable, see |qfpreview.close| below.
@@ -128,7 +146,7 @@ Examples ~
             \ height: 20
             \ }
 
-    " Or in after/ftplugin/qf.vim
+    " Or alternatively in ~/.vim/after/ftplugin/qf.vim
     let b:qfpreview = #{scrolldown: 'j', scrollup: 'k', height: 20}
 <
 
