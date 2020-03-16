@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Nov 5, 2019
+" Last Change:  Mar 16, 2020
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -12,16 +12,16 @@ scriptencoding utf-8
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:defaults = #{
-        \ height: 15,
-        \ scrollup: "\<c-k>",
-        \ scrolldown: "\<c-j>",
-        \ halfpageup: "\<c-u>",
-        \ halfpagedown: "\<c-d>",
-        \ fullpageup: "\<c-b>",
-        \ fullpagedown: "\<c-f>",
-        \ close: 'x',
-        \ mapping: v:false
+let s:defaults = {
+        \ 'height': 15,
+        \ 'scrollup': "\<c-k>",
+        \ 'scrolldown': "\<c-j>",
+        \ 'halfpageup': "\<c-u>",
+        \ 'halfpagedown': "\<c-d>",
+        \ 'fullpageup': "\<c-b>",
+        \ 'fullpagedown': "\<c-f>",
+        \ 'close': 'x',
+        \ 'mapping': v:false
         \ }
 
 function! s:get(key) abort
@@ -30,7 +30,7 @@ function! s:get(key) abort
 endfunction
 
 let s:mappings = {
-        \ 'g': {id -> popup_setoptions(id, #{firstline: 1})},
+        \ 'g': {id -> popup_setoptions(id, {'firstline': 1})},
         \ 'G': {id -> s:scroll(id, 'G')},
         \ '+': {id -> s:setheight(id, 1)},
         \ '-': {id -> s:setheight(id, -1)}
@@ -47,13 +47,13 @@ let s:mappings[s:get('close')]        = {id -> popup_close(id)}
 function! s:scroll(winid, cmd) abort
     call win_execute(a:winid, 'normal! ' .. a:cmd)
     let firstline = popup_getpos(a:winid).firstline
-    call popup_setoptions(a:winid, #{firstline: firstline})
+    call popup_setoptions(a:winid, {'firstline': firstline})
 endfunction
 
 function! s:setheight(winid, step) abort
     let height = popup_getoptions(a:winid).minheight
     let newheight = height + a:step > 0 ? height + a:step : 1
-    call popup_setoptions(a:winid, #{minheight: newheight, maxheight: newheight})
+    call popup_setoptions(a:winid, {'minheight': newheight, 'maxheight': newheight})
 endfunction
 
 function! s:popup_filter(winid, key) abort
@@ -81,38 +81,38 @@ function! qfpreview#open(idx) abort
     " Truncate long titles
     if len(title) > wininfo.width
         let width = wininfo.width - 4
-        let title = '…' . title[-width:]
+        let title = '…' .. title[-width:]
     endif
 
     if space_above > height
         if space_above == height + 1
             let height = height - 1
         endif
-        let opts = #{
-                \ line: wininfo.winrow - 1,
-                \ pos: 'botleft'
+        let opts = {
+                \ 'line': wininfo.winrow - 1,
+                \ 'pos': 'botleft'
                 \ }
     elseif space_below >= height
-        let opts = #{
-                \ line: wininfo.winrow + wininfo.height,
-                \ pos: 'topleft'
+        let opts = {
+                \ 'line': wininfo.winrow + wininfo.height,
+                \ 'pos': 'topleft'
                 \ }
     elseif space_above > 5
         let height = space_above - 2
-        let opts = #{
-                \ line: wininfo.winrow - 1,
-                \ pos: 'botleft'
+        let opts = {
+                \ 'line': wininfo.winrow - 1,
+                \ 'pos': 'botleft'
                 \ }
     elseif space_below > 5
         let height = space_below - 2
-        let opts = #{
-                \ line: wininfo.winrow + wininfo.height,
-                \ pos: 'topleft'
+        let opts = {
+                \ 'line': wininfo.winrow + wininfo.height,
+                \ 'pos': 'topleft'
                 \ }
     elseif space_above <= 5 || space_below <= 5
-        let opts = #{
-                \ line: &lines - &cmdheight,
-                \ pos: 'botleft'
+        let opts = {
+                \ 'line': &lines - &cmdheight,
+                \ 'pos': 'botleft'
                 \ }
     else
         echohl ErrorMsg
@@ -121,26 +121,26 @@ function! qfpreview#open(idx) abort
         return
     endif
 
-    call extend(opts, #{
-            \ col: wininfo.wincol,
-            \ minheight: height,
-            \ maxheight: height,
-            \ minwidth: wininfo.width - 1,
-            \ maxwidth: wininfo.width - 1,
-            \ firstline: qfitem.lnum < 1 ? 1 : qfitem.lnum,
-            \ title: title,
-            \ close: 'button',
-            \ padding: [0,1,1,1],
-            \ border: [1,0,0,0],
-            \ borderchars: [' '],
-            \ moved: 'any',
-            \ mapping: s:get('mapping'),
-            \ filter: funcref('s:popup_filter'),
-            \ filtermode: 'n',
-            \ highlight: 'QfPreview',
-            \ borderhighlight: ['QfPreviewTitle'],
-            \ scrollbarhighlight: 'QfPreviewScrollbar',
-            \ thumbhighlight: 'QfPreviewThumb'
+    call extend(opts, {
+            \ 'col': wininfo.wincol,
+            \ 'minheight': height,
+            \ 'maxheight': height,
+            \ 'minwidth': wininfo.width - 1,
+            \ 'maxwidth': wininfo.width - 1,
+            \ 'firstline': qfitem.lnum < 1 ? 1 : qfitem.lnum,
+            \ 'title': title,
+            \ 'close': 'button',
+            \ 'padding': [0,1,1,1],
+            \ 'border': [1,0,0,0],
+            \ 'borderchars': [' '],
+            \ 'moved': 'any',
+            \ 'mapping': s:get('mapping'),
+            \ 'filter': funcref('s:popup_filter'),
+            \ 'filtermode': 'n',
+            \ 'highlight': 'QfPreview',
+            \ 'borderhighlight': ['QfPreviewTitle'],
+            \ 'scrollbarhighlight': 'QfPreviewScrollbar',
+            \ 'thumbhighlight': 'QfPreviewThumb'
             \ })
 
     hi def link QfPreview Pmenu
