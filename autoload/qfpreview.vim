@@ -12,6 +12,11 @@ scriptencoding utf-8
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+hi def link QfPreview           Pmenu
+hi def link QfPreviewTitle      Pmenu
+hi def link QfPreviewScrollbar  PmenuSbar
+hi def link QfPreviewThumb      PmenuThumb
+
 let s:defaults = {
         \ 'height': 15,
         \ 'scrollup': "\<c-k>",
@@ -24,10 +29,7 @@ let s:defaults = {
         \ 'mapping': v:false
         \ }
 
-function! s:get(key) abort
-    let var = get(b:, 'qfpreview', get(g:, 'qfpreview', {}))
-    return has_key(var, a:key) ? var[a:key] : s:defaults[a:key]
-endfunction
+let s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defaults[x])}
 
 let s:mappings = {
         \ 'g': {id -> popup_setoptions(id, {'firstline': 1})},
@@ -143,12 +145,7 @@ function! qfpreview#open(idx) abort
             \ 'thumbhighlight': 'QfPreviewThumb'
             \ })
 
-    hi def link QfPreview Pmenu
-    hi def link QfPreviewTitle Pmenu
-    hi def link QfPreviewScrollbar PmenuSbar
-    hi def link QfPreviewThumb PmenuThumb
-
-    silent call popup_create(qfitem.bufnr, opts)
+    silent return popup_create(qfitem.bufnr, opts)
 endfunction
 
 let &cpoptions = s:save_cpo
