@@ -33,8 +33,8 @@ nmap <buffer> p <plug>(qf-preview-open)
 Or alternatively, if you prefer to keep your plugin settings in your `vimrc`:
 ```vim
 augroup qfpreview
-  autocmd!
-  autocmd FileType qf nmap <buffer> p <plug>(qf-preview-open)
+    autocmd!
+    autocmd FileType qf nmap <buffer> p <plug>(qf-preview-open)
 augroup END
 ```
 
@@ -75,15 +75,15 @@ through the `height` entry.
 Example:
 ```vim
 " in vimrc
-let g:qfpreview = #{
-    \ scrollup: 'k',
-    \ scrolldown: 'j',
-    \ halfpageup: 'u',
-    \ halfpagedown: 'd',
-    \ fullpageup: 'b',
-    \ fullpagedown: 'f',
-    \ close: 'q',
-    \ height: 20
+let g:qfpreview = {
+    \ 'scrollup': 'k',
+    \ 'scrolldown': 'j',
+    \ 'halfpageup': 'u',
+    \ 'halfpagedown': 'd',
+    \ 'fullpageup': 'b',
+    \ 'fullpagedown': 'f',
+    \ 'close': 'q',
+    \ 'height': 20
     \ }
 ```
 
@@ -91,7 +91,7 @@ let g:qfpreview = #{
 
 The appearance of the popup window can be configured through the highlighting
 groups `QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar` and `QfPreviewThumb`.
-See `:help qfpreview-highlight` for more details.
+See <kbd>:help qfpreview-highlight</kbd> for more details.
 
 
 ## Installation
@@ -105,7 +105,7 @@ $ git clone https://github.com/bfrg/vim-qf-preview
 $ vim -u NONE -c "helptags vim-qf-preview/doc" -c q
 ```
 **Note:** The directory name `git-plugins` is arbitrary, you can pick any other
-name. For more details see `:help packages`.
+name. For more details see <kbd>:help packages</kbd>.
 
 ### Plugin Managers
 
@@ -120,4 +120,4 @@ endif
 
 ## License
 
-Distributed under the same terms as Vim itself. See `:help license`.
+Distributed under the same terms as Vim itself. See <kbd>:help license</kbd>.

@@ -48,40 +48,30 @@ Popup window ~
                                                                  *qfpreview_x*
 x           Close the popup window.
             Configurable, see |qfpreview.close| below.
-
                                                             *qfpreview_CTRL-J*
 CTRL-J      Scroll the popup window down one text line.
             Configurable, see |qfpreview.scrolldown| below.
-
                                                             *qfpreview_CTRL-K*
 CTRL-K      Scroll the popup window up one text line.
             Configurable, see |qfpreview.scrollup| below.
-
                                                             *qfpreview_CTRL-D*
 CTRL-D      Scroll the popup window down one half page.
             Configurable, see |qfpreview.halfpagedown| below.
-
                                                             *qfpreview_CTRL-U*
 CTRL-U      Scroll the popup window up one half page.
             Configurable, see |qfpreview.halfpageup| below.
-
                                                             *qfpreview_CTRL-F*
 CTRL-F      Scroll the popup window down one full page.
             Configurable, see |qfpreview.fullpagedown| below.
-
                                                             *qfpreview_CTRL-B*
 CTRL-B      Scroll the popup window up one full page.
             Configurable, see |qfpreview.fullpageup| below.
-
                                                                  *qfpreview_g*
 g           Jump to first line of displayed buffer.
-
                                                                  *qfpreview_G*
 G           Jump to bottom of displayed buffer.
-
                                                                  *qfpreview_+*
 +           Increase the height of the popup window by one line.
-
                                                                  *qfpreview_-*
 -           Decrease the height of the popup window by one line.
 
@@ -98,8 +88,8 @@ CONFIGURATION                                               *qfpreview-config*
 b:qfpreview                                          *b:qfpreview* *g:qfpreview*
 g:qfpreview
 
-The default key mappings and the height of the popup window can be changed
-through the |buffer-variable| b:qfpreview in |qf.vim|, or through the
+The default key mappings and the initial height of the popup window can be
+changed through the |buffer-variable| b:qfpreview in |qf.vim|, or through the
 |global-variable| g:qfpreview. The following |Dictionary| keys are supported:
 
                                                              *qfpreview.close*
@@ -134,47 +124,42 @@ through the |buffer-variable| b:qfpreview in |qf.vim|, or through the
 Examples ~
 >
     " In your vimrc
-    let g:qfpreview = #{
-            \ scrolldown: 'j',
-            \ scrollup: 'k',
-            \ halfpagedown: 'd',
-            \ halfpageup: 'u',
-            \ fullpagedown: 'f',
-            \ fullpageup: 'b',
-            \ close: 'q',
-            \ height: 20
+    let g:qfpreview = {
+            \ 'scrolldown': 'j',
+            \ 'scrollup': 'k',
+            \ 'halfpagedown': 'd',
+            \ 'halfpageup': 'u',
+            \ 'fullpagedown': 'f',
+            \ 'fullpageup': 'b',
+            \ 'close': 'q',
+            \ 'height': 20
             \ }
 
     " Or alternatively in ~/.vim/after/ftplugin/qf.vim
-    let b:qfpreview = #{scrolldown: 'j', scrollup: 'k', height: 20}
+    let b:qfpreview = {
+            \ 'scrolldown': 'j',
+            \ 'scrollup': 'k',
+            \ 'height': 20
+            \ }
 <
-
                                                          *qfpreview-highlight*
 Highlight Groups ~
 
 The following highlighting groups are used by the plugin:
-
                                                                 *hl-QfPreview*
 QfPreview           Normal text in the popup window. This is the equivalent of
                     the |hl-Normal| highlight group in regular windows.
-
                     By default links to |hl-Pmenu|.
-
                                                            *hl-QfPreviewTitle*
 QfPreviewTitle      Title (top line) of the popup window.
-
                     By default links to |hl-Pmenu|.
                                                        *hl-QfPreviewScrollbar*
-
 QfPreviewScrollbar  Highlight group name for the |popup-scrollbar|. The
                     background color is what matters.
-
                     By default links to |hl-PmenuSbar|.
-
                                                            *hl-QfPreviewThumb*
 QfPreviewThumb      Highlight group name for the |popup-scrollbar| thumb. The
                     background color is what matters.
-
                     By default links to |hl-PmenuThumb|.
 
  vim:tw=78:et:ft=help:norl:
