@@ -129,6 +129,9 @@ let g:qfpreview = {
     \ }
 ```
 
+Screenshots of 2., 3. and 4.:
+![out](https://user-images.githubusercontent.com/6266600/77472775-b4cdaa00-6e14-11ea-8abd-d55c47fdeda7.png)
+
 
 ## Installation
 
