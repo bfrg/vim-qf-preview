@@ -39,7 +39,8 @@ function! s:setheight(winid, step) abort
     call popup_setoptions(a:winid, {'minheight': newheight, 'maxheight': newheight})
 endfunction
 
-function! s:popup_filter(winid, key) abort
+" function! s:popup_filter(qflist, index, winid, key) abort
+function! s:popup_filter(line, winid, key) abort
     if a:key ==# s:get('scrollup')
         call win_execute(a:winid, "normal! \<c-y>")
     elseif a:key ==# s:get('scrolldown')
@@ -62,6 +63,9 @@ function! s:popup_filter(winid, key) abort
         call s:setheight(a:winid, 1)
     elseif a:key ==# '-'
         call s:setheight(a:winid, -1)
+    elseif a:key ==# 'r'
+        call popup_setoptions(a:winid, {'firstline': a:line})
+        call popup_setoptions(a:winid, {'firstline': 0})
     else
         return v:false
     endif
@@ -79,6 +83,7 @@ function! qfpreview#open(idx) abort
 
     let space_above = wininfo.winrow - 1
     let space_below = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
+    let lnum = qfitem.lnum < 1 ? 1 : qfitem.lnum
     let height = s:get('height')
     let title = printf('%s (%d/%d)', bufname(qfitem.bufnr), a:idx+1, len(qflist))
 
@@ -131,7 +136,7 @@ function! qfpreview#open(idx) abort
             \ 'maxheight': height,
             \ 'minwidth': wininfo.width - 1,
             \ 'maxwidth': wininfo.width - 1,
-            \ 'firstline': qfitem.lnum < 1 ? 1 : qfitem.lnum,
+            \ 'firstline': lnum,
             \ 'title': title,
             \ 'close': s:get('mouseclick'),
             \ 'padding': [0,1,1,1],
@@ -139,7 +144,7 @@ function! qfpreview#open(idx) abort
             \ 'borderchars': [' '],
             \ 'moved': 'any',
             \ 'mapping': v:false,
-            \ 'filter': funcref('s:popup_filter'),
+            \ 'filter': funcref('s:popup_filter', [lnum]),
             \ 'filtermode': 'n',
             \ 'highlight': 'QfPreview',
             \ 'scrollbar': s:get('scrollbar'),

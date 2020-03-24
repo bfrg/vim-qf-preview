@@ -4,7 +4,6 @@ Author:     bfrg <https://github.com/bfrg>
 Website:    https://github.com/bfrg/vim-qf-preview
 License:    Same terms as Vim itself (see |license|)
 
-
 ==============================================================================
 INTRODUCTION                                        *vim-qf-preview* *qfpreview*
 
@@ -49,19 +48,20 @@ Popup window mappings ~
 
 The following keys can be used while the popup window is open:
 
-x           Close the popup window.
 CTRL-J      Scroll popup window down one text line.
 CTRL-K      Scroll popup window up one text line.
 CTRL-D      Scroll popup window down one half page.
 CTRL-U      Scroll popup window up one half page.
 CTRL-F      Scroll popup window down one full page.
 CTRL-B      Scroll popup window up one full page.
+x           Close the popup window.
 g           Jump to first line of displayed buffer.
 G           Jump to bottom of displayed buffer.
 +           Increase the height of the popup window by one line.
 -           Decrease the height of the popup window by one line.
+r           Jump back to error line after scrolling ("reset").
 
-The keys for scrolling and closing the popup window are all configurable. See
+The keys for scrolling and closing the popup window are configurable. See
 |qfpreview-config| below.
 
 ==============================================================================

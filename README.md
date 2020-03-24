@@ -51,6 +51,7 @@ The following default popup mappings are provided:
 - Jump to first/last line of displayed buffer: <kbd>g</kbd>, <kbd>G</kbd>
 - Increase/decrease height of popup window: <kbd>+</kbd>, <kbd>-</kbd>
 - Close the popup window: <kbd>x</kbd>
+- Jump back to error line after scrolling ("reset"): <kbd>r</kbd>
 
 
 ## Configuration
