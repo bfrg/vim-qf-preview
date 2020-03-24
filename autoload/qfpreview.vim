@@ -19,6 +19,9 @@ hi def link QfPreviewThumb      PmenuThumb
 
 let s:defaults = {
         \ 'height': 15,
+        \ 'mouseclick': 'button',
+        \ 'scrollbar': v:true,
+        \ 'number': v:false,
         \ 'scrollup': "\<c-k>",
         \ 'scrolldown': "\<c-j>",
         \ 'halfpageup': "\<c-u>",
@@ -130,7 +133,7 @@ function! qfpreview#open(idx) abort
             \ 'maxwidth': wininfo.width - 1,
             \ 'firstline': qfitem.lnum < 1 ? 1 : qfitem.lnum,
             \ 'title': title,
-            \ 'close': 'button',
+            \ 'close': s:get('mouseclick'),
             \ 'padding': [0,1,1,1],
             \ 'border': [1,0,0,0],
             \ 'borderchars': [' '],
@@ -139,12 +142,19 @@ function! qfpreview#open(idx) abort
             \ 'filter': funcref('s:popup_filter'),
             \ 'filtermode': 'n',
             \ 'highlight': 'QfPreview',
+            \ 'scrollbar': s:get('scrollbar'),
             \ 'borderhighlight': ['QfPreviewTitle'],
             \ 'scrollbarhighlight': 'QfPreviewScrollbar',
             \ 'thumbhighlight': 'QfPreviewThumb'
             \ })
 
-    silent return popup_create(qfitem.bufnr, opts)
+    silent let winid = popup_create(qfitem.bufnr, opts)
+
+    if s:get('number')
+        call setwinvar(winid, '&number', 1)
+    endif
+
+    return winid
 endfunction
 
 let &cpoptions = s:save_cpo
