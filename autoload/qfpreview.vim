@@ -33,27 +33,6 @@ let s:defaults = {
 
 let s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defaults[x])}
 
-let s:mappings = {
-        \ 'g': {id -> popup_setoptions(id, {'firstline': 1})},
-        \ 'G': {id -> s:scroll(id, 'G')},
-        \ '+': {id -> s:setheight(id, 1)},
-        \ '-': {id -> s:setheight(id, -1)}
-        \ }
-
-let s:mappings[s:get('scrollup')]     = {id -> s:scroll(id, "\<c-y>")}
-let s:mappings[s:get('scrolldown')]   = {id -> s:scroll(id, "\<c-e>")}
-let s:mappings[s:get('halfpageup')]   = {id -> s:scroll(id, "\<c-u>")}
-let s:mappings[s:get('halfpagedown')] = {id -> s:scroll(id, "\<c-d>")}
-let s:mappings[s:get('fullpageup')]   = {id -> s:scroll(id, "\<c-b>")}
-let s:mappings[s:get('fullpagedown')] = {id -> s:scroll(id, "\<c-f>")}
-let s:mappings[s:get('close')]        = {id -> popup_close(id)}
-
-function! s:scroll(winid, cmd) abort
-    call win_execute(a:winid, 'normal! ' .. a:cmd)
-    let firstline = popup_getpos(a:winid).firstline
-    call popup_setoptions(a:winid, {'firstline': firstline})
-endfunction
-
 function! s:setheight(winid, step) abort
     let height = popup_getoptions(a:winid).minheight
     let newheight = height + a:step > 0 ? height + a:step : 1
@@ -61,24 +40,45 @@ function! s:setheight(winid, step) abort
 endfunction
 
 function! s:popup_filter(winid, key) abort
-    if has_key(s:mappings, a:key)
-        call get(s:mappings, a:key)(a:winid)
-        return v:true
+    if a:key ==# s:get('scrollup')
+        call win_execute(a:winid, "normal! \<c-y>")
+    elseif a:key ==# s:get('scrolldown')
+        call win_execute(a:winid, "normal! \<c-e>")
+    elseif a:key ==# s:get('halfpageup')
+        call win_execute(a:winid, "normal! \<c-u>")
+    elseif a:key ==# s:get('halfpagedown')
+        call win_execute(a:winid, "normal! \<c-d>")
+    elseif a:key ==# s:get('fullpageup')
+        call win_execute(a:winid, "normal! \<c-b>")
+    elseif a:key ==# s:get('fullpagedown')
+        call win_execute(a:winid, "normal! \<c-f>")
+    elseif a:key ==# s:get('close')
+        call popup_close(a:winid)
+    elseif a:key ==# 'g'
+        call win_execute(a:winid, 'normal! gg')
+    elseif a:key ==# 'G'
+        call win_execute(a:winid, 'normal! G')
+    elseif a:key ==# '+'
+        call s:setheight(a:winid, 1)
+    elseif a:key ==# '-'
+        call s:setheight(a:winid, -1)
+    else
+        return v:false
     endif
-    return v:false
+    return v:true
 endfunction
 
 function! qfpreview#open(idx) abort
     let wininfo = getwininfo(win_getid())[0]
     let qflist = wininfo.loclist ? getloclist(0) : getqflist()
     let qfitem = qflist[a:idx]
-    let space_above = wininfo.winrow - 1
-    let space_below = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
 
     if !qfitem.valid
         return
     endif
 
+    let space_above = wininfo.winrow - 1
+    let space_below = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
     let height = s:get('height')
     let title = printf('%s (%d/%d)', bufname(qfitem.bufnr), a:idx+1, len(qflist))
 
@@ -149,6 +149,9 @@ function! qfpreview#open(idx) abort
             \ })
 
     silent let winid = popup_create(qfitem.bufnr, opts)
+
+    " Set to zero to prevent jumps when calling win_execute() #4876
+    call popup_setoptions(winid, {'firstline': 0})
 
     if s:get('number')
         call setwinvar(winid, '&number', 1)
