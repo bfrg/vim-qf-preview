@@ -1,6 +1,6 @@
 # vim-qf-preview
 
-A plugin for the quickfix and location list windows to quickly preview the file
+A plugin for the quickfix and location list window to quickly preview the file
 with the quickfix item under the cursor in a popup window.
 
 **Note:** Plugin requires at least Vim `8.1.2250`.
@@ -76,12 +76,25 @@ dictionary containing any of the following entries:
 | `scrollbar`    | Display a scrollbar.                                             | `v:true`   |
 | `number`       | Enable the `'number'` column in the popup window.                | `v:false`  |
 | `mouseclick`   | Enable mouse clicks. Possible values: `none`, `click`, `button`¹ | `"button"` |
+| `sign`         | Place a `sign` at the error line in the displayed buffer.²       | `{}`       |
 
 ¹See <kbd>:help qfpreview.mouseclick</kbd> for more details on each value.
 
-Example:
+²For valid options for the `sign` entry see <kbd>:help qfpreview.sign</kbd> and
+the [examples](#examples) below.
+
+### Highlighting
+
+The highlighting of the popup window can be configured through the highlighting
+groups `QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar` and `QfPreviewThumb`.
+See <kbd>:help qfpreview-highlight</kbd> for more details.
+
+### Examples
+
+1. Override the popup scrolling keys, close the window with <kbd>q</kbd>, and
+   remove both scrollbar and the "X" in the top-right corner of the popup
+   window:
 ```vim
-" in vimrc
 let g:qfpreview = {
     \ 'scrollup': 'k',
     \ 'scrolldown': 'j',
@@ -89,18 +102,32 @@ let g:qfpreview = {
     \ 'halfpagedown': 'd',
     \ 'fullpageup': 'b',
     \ 'fullpagedown': 'f',
-    \ 'scrollbar': 'v:false',
-    \ 'mouseclick': 'none',
     \ 'close': 'q',
+    \ 'scrollbar': 0,
+    \ 'mouseclick': 'none',
     \ 'height': 20
     \ }
 ```
 
-### Highlighting
+2. Place a sign in the buffer at the error line and highlight the whole line
+   using `CursorLine`:
+```vim
+let g:qfpreview = {'sign': {'linehl': 'CursorLine'}}
+```
 
-The highlighting of the popup window can be configured through the highlighting
-groups `QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar` and `QfPreviewThumb`.
-See <kbd>:help qfpreview-highlight</kbd> for more details.
+3. Instead of highlighting the whole line, display a sign in the `'signcolumn'`:
+```vim
+let g:qfpreview = {'sign': {'text': '>>', 'texthl': 'Search'}}
+```
+
+4. Same as 3., but also enable the `'number'` column. In this case the placed
+   sign is shown in the `'number'` column:
+```vim
+let g:qfpreview = {
+    \ 'number': 1,
+    \ 'sign': {'text': '>>', 'texthl': 'Todo'}
+    \ }
+```
 
 
 ## Installation

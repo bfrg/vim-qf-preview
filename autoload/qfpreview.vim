@@ -22,6 +22,7 @@ let s:defaults = {
         \ 'mouseclick': 'button',
         \ 'scrollbar': v:true,
         \ 'number': v:false,
+        \ 'sign': {},
         \ 'scrollup': "\<c-k>",
         \ 'scrolldown': "\<c-j>",
         \ 'halfpageup': "\<c-u>",
@@ -37,9 +38,11 @@ function! s:setheight(winid, step) abort
     let height = popup_getoptions(a:winid).minheight
     let newheight = height + a:step > 0 ? height + a:step : 1
     call popup_setoptions(a:winid, {'minheight': newheight, 'maxheight': newheight})
+    if !empty(s:get('sign')->get('text', ''))
+        call setwinvar(a:winid, '&signcolumn', 'number')
+    endif
 endfunction
 
-" function! s:popup_filter(qflist, index, winid, key) abort
 function! s:popup_filter(line, winid, key) abort
     if a:key ==# s:get('scrollup')
         call win_execute(a:winid, "normal! \<c-y>")
@@ -66,6 +69,10 @@ function! s:popup_filter(line, winid, key) abort
     elseif a:key ==# 'r'
         call popup_setoptions(a:winid, {'firstline': a:line})
         call popup_setoptions(a:winid, {'firstline': 0})
+        " Note: after popup_setoptions() 'signcolumn' needs to be reset again
+        if !empty(s:get('sign')->get('text', ''))
+            call setwinvar(a:winid, '&signcolumn', 'number')
+        endif
     else
         return v:false
     endif
@@ -130,36 +137,44 @@ function! qfpreview#open(idx) abort
         return
     endif
 
-    call extend(opts, {
-            \ 'col': wininfo.wincol,
-            \ 'minheight': height,
-            \ 'maxheight': height,
-            \ 'minwidth': wininfo.width - 1,
-            \ 'maxwidth': wininfo.width - 1,
-            \ 'firstline': lnum,
-            \ 'title': title,
-            \ 'close': s:get('mouseclick'),
-            \ 'padding': [0,1,1,1],
-            \ 'border': [1,0,0,0],
-            \ 'borderchars': [' '],
-            \ 'moved': 'any',
-            \ 'mapping': v:false,
-            \ 'filter': funcref('s:popup_filter', [lnum]),
-            \ 'filtermode': 'n',
-            \ 'highlight': 'QfPreview',
-            \ 'scrollbar': s:get('scrollbar'),
-            \ 'borderhighlight': ['QfPreviewTitle'],
-            \ 'scrollbarhighlight': 'QfPreviewScrollbar',
-            \ 'thumbhighlight': 'QfPreviewThumb'
-            \ })
+    silent let winid = popup_create(qfitem.bufnr, extend(opts, {
+            \   'col': wininfo.wincol,
+            \   'minheight': height,
+            \   'maxheight': height,
+            \   'minwidth': wininfo.width - 1,
+            \   'maxwidth': wininfo.width - 1,
+            \   'firstline': lnum,
+            \   'title': title,
+            \   'close': s:get('mouseclick'),
+            \   'padding': [0,1,1,1],
+            \   'border': [1,0,0,0],
+            \   'borderchars': [' '],
+            \   'moved': 'any',
+            \   'mapping': v:false,
+            \   'filter': funcref('s:popup_filter', [lnum]),
+            \   'filtermode': 'n',
+            \   'highlight': 'QfPreview',
+            \   'scrollbar': s:get('scrollbar'),
+            \   'borderhighlight': ['QfPreviewTitle'],
+            \   'scrollbarhighlight': 'QfPreviewScrollbar',
+            \   'thumbhighlight': 'QfPreviewThumb',
+            \   'callback': {... -> !empty(s:get('sign'))
+            \     ? [sign_unplace('PopUpQfPreview'), sign_undefine('QfErrorLine')]
+            \     : 0
+            \   }
+            \ }))
 
-    silent let winid = popup_create(qfitem.bufnr, opts)
-
-    " Set to zero to prevent jumps when calling win_execute() #4876
+    " Set firstline to zero to prevent jumps when calling win_execute() #4876
     call popup_setoptions(winid, {'firstline': 0})
+    call setwinvar(winid, '&number', !!s:get('number'))
 
-    if s:get('number')
-        call setwinvar(winid, '&number', 1)
+    if !empty(s:get('sign')->get('text', ''))
+        call setwinvar(winid, '&signcolumn', 'number')
+    endif
+
+    if !empty(s:get('sign'))
+        call sign_define('QfErrorLine', s:get('sign'))
+        call sign_place(0, 'PopUpQfPreview', 'QfErrorLine', qfitem.bufnr, {'lnum': lnum})
     endif
 
     return winid
