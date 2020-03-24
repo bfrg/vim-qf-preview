@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Mar 16, 2020
+" Last Change:  Mar 24, 2020
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -25,8 +25,7 @@ let s:defaults = {
         \ 'halfpagedown': "\<c-d>",
         \ 'fullpageup': "\<c-b>",
         \ 'fullpagedown': "\<c-f>",
-        \ 'close': 'x',
-        \ 'mapping': v:false
+        \ 'close': 'x'
         \ }
 
 let s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defaults[x])}
@@ -136,7 +135,7 @@ function! qfpreview#open(idx) abort
             \ 'border': [1,0,0,0],
             \ 'borderchars': [' '],
             \ 'moved': 'any',
-            \ 'mapping': s:get('mapping'),
+            \ 'mapping': v:false,
             \ 'filter': funcref('s:popup_filter'),
             \ 'filtermode': 'n',
             \ 'highlight': 'QfPreview',
