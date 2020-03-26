@@ -94,12 +94,16 @@ function! qfpreview#open(idx) abort
     let lnum = qfitem.lnum < 1 ? 1 : qfitem.lnum
     let firstline = qfitem.lnum - s:get('offset') < 1 ? 1 : qfitem.lnum - s:get('offset')
     let height = s:get('height')
-    let title = printf('%s (%d/%d)', bufname(qfitem.bufnr), a:idx+1, len(qflist))
 
-    " Truncate long titles
+    let title = printf('%s (%d/%d)',
+            \ bufname(qfitem.bufnr)->fnamemodify(':~:.'),
+            \ a:idx + 1,
+            \ len(qflist)
+            \ )
+
+    " Truncate long titles at beginning
     if len(title) > wininfo.width
-        let width = wininfo.width - 4
-        let title = '…' .. title[-width:]
+        let title = '…' .. title[-(wininfo.width-4):]
     endif
 
     if space_above > height
