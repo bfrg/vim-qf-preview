@@ -73,15 +73,15 @@ dictionary containing any of the following entries:
 | `fullpagedown` | Scroll buffer down one full page.                                | `"\<C-f>"` |
 | `close`        | Close the popup window.                                          | `"x"`      |
 | `height`       | Number of text lines to display in the popup window.             | `15`       |
+| `offset`       | Number of buffer lines to show above the error line.             | `0`        |
 | `scrollbar`    | Display a scrollbar.                                             | `v:true`   |
 | `number`       | Enable the `'number'` column in the popup window.                | `v:false`  |
 | `mouseclick`   | Enable mouse clicks. Possible values: `none`, `click`, `button`¹ | `"button"` |
 | `sign`         | Place a `sign` at the error line in the displayed buffer.²       | `{}`       |
 
-¹See <kbd>:help qfpreview.mouseclick</kbd> for more details on each value.
-
-²For valid options for the `sign` entry see <kbd>:help qfpreview.sign</kbd> and
-the [examples](#examples) below.
+¹See <kbd>:help qfpreview.mouseclick</kbd> for more details on each value.</br>
+²For valid `sign` attributes see <kbd>:help qfpreview.sign</kbd> and the
+[examples](#examples) below.
 
 ### Highlighting
 
@@ -123,10 +123,7 @@ let g:qfpreview = {'sign': {'text': '>>', 'texthl': 'Search'}}
 4. Same as 3., but also enable the `'number'` column. In this case the placed
    sign is shown in the `'number'` column:
 ```vim
-let g:qfpreview = {
-    \ 'number': 1,
-    \ 'sign': {'text': '>>', 'texthl': 'Todo'}
-    \ }
+let g:qfpreview = {'number': 1, 'sign': {'text': '>>', 'texthl': 'Todo'}}
 ```
 
 Screenshots of 2., 3. and 4.:

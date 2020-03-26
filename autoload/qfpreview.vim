@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Mar 24, 2020
+" Last Change:  Mar 26, 2020
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -22,6 +22,7 @@ let s:defaults = {
         \ 'mouseclick': 'button',
         \ 'scrollbar': v:true,
         \ 'number': v:false,
+        \ 'offset': 0,
         \ 'sign': {},
         \ 'scrollup': "\<c-k>",
         \ 'scrolldown': "\<c-j>",
@@ -91,6 +92,7 @@ function! qfpreview#open(idx) abort
     let space_above = wininfo.winrow - 1
     let space_below = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
     let lnum = qfitem.lnum < 1 ? 1 : qfitem.lnum
+    let firstline = qfitem.lnum - s:get('offset') < 1 ? 1 : qfitem.lnum - s:get('offset')
     let height = s:get('height')
     let title = printf('%s (%d/%d)', bufname(qfitem.bufnr), a:idx+1, len(qflist))
 
@@ -143,7 +145,7 @@ function! qfpreview#open(idx) abort
             \   'maxheight': height,
             \   'minwidth': wininfo.width - 1,
             \   'maxwidth': wininfo.width - 1,
-            \   'firstline': lnum,
+            \   'firstline': firstline,
             \   'title': title,
             \   'close': s:get('mouseclick'),
             \   'padding': [0,1,1,1],
@@ -151,7 +153,7 @@ function! qfpreview#open(idx) abort
             \   'borderchars': [' '],
             \   'moved': 'any',
             \   'mapping': v:false,
-            \   'filter': funcref('s:popup_filter', [lnum]),
+            \   'filter': funcref('s:popup_filter', [firstline]),
             \   'filtermode': 'n',
             \   'highlight': 'QfPreview',
             \   'scrollbar': s:get('scrollbar'),

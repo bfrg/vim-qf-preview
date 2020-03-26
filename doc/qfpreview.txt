@@ -46,7 +46,7 @@ Quickfix window ~
                                                     *qfpreview-popup-mappings*
 Popup window mappings ~
 
-The following keys can be used while the popup window is open:
+The following default keys can be used while the popup window is open:
 
 CTRL-J      Scroll popup window down one text line.
 CTRL-K      Scroll popup window up one text line.
@@ -109,6 +109,10 @@ a |Dictionary| containing any of the following entries:
                                                             *qfpreview.height*
     height          Number of text lines to display in the popup window.
                     Default: 15
+                                                            *qfpreview.offset*
+    offset          Number of buffer lines to show above the error line when
+                    the popup window is opened.
+                    Default: 0
                                                          *qfpreview.scrollbar*
     scrollbar       Display a scrollbar. See |qfpreview-highlight| for highlight
                     groups.
@@ -145,6 +149,7 @@ Examples ~
             \ 'close': 'q',
             \ 'mouseclick': 'none',
             \ 'number': v:true,
+            \ 'offset': 5,
             \ 'height': 20
             \ }
 
