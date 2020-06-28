@@ -3,8 +3,6 @@
 A plugin for the quickfix and location list window to quickly preview the file
 with the quickfix item under the cursor in a popup window.
 
-**Note:** Plugin requires at least Vim `8.1.2250`.
-
 <dl>
   <p align="center">
   <a href="https://asciinema.org/a/265817">
@@ -12,6 +10,11 @@ with the quickfix item under the cursor in a popup window.
   </a>
   </p>
 </dl>
+
+
+## Requirements
+
+Vim `>= 8.1.2250`
 
 
 ## Usage
@@ -50,7 +53,7 @@ The following default popup mappings are provided:
 - Scroll up/down one full page: <kbd>Ctrl-b</kbd>, <kbd>Ctrl-f</kbd>
 - Jump to first/last line of displayed buffer: <kbd>g</kbd>, <kbd>G</kbd>
 - Increase/decrease height of popup window: <kbd>+</kbd>, <kbd>-</kbd>
-- Close the popup window: <kbd>x</kbd>
+- Close the popup window: <kbd>q</kbd>, <kbd>CTRL-C</kbd>
 - Jump back to error line after scrolling ("reset"): <kbd>r</kbd>
 
 
@@ -71,7 +74,7 @@ dictionary containing any of the following entries:
 | `halfpagedown` | Scroll buffer down one half page.                                | `"\<C-d>"` |
 | `fullpageup`   | Scroll buffer up one full page.                                  | `"\<C-b>"` |
 | `fullpagedown` | Scroll buffer down one full page.                                | `"\<C-f>"` |
-| `close`        | Close the popup window.                                          | `"x"`      |
+| `close`        | Close the popup window.                                          | `"q"`      |
 | `height`       | Number of text lines to display in the popup window.             | `15`       |
 | `offset`       | Number of buffer lines to show above the error line.             | `0`        |
 | `scrollbar`    | Display a scrollbar.                                             | `v:true`   |

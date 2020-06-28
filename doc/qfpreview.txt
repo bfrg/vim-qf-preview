@@ -54,7 +54,7 @@ CTRL-D      Scroll popup window down one half page.
 CTRL-U      Scroll popup window up one half page.
 CTRL-F      Scroll popup window down one full page.
 CTRL-B      Scroll popup window up one full page.
-x           Close the popup window.
+CTRL-C, q   Close the popup window.
 g           Jump to first line of displayed buffer.
 G           Jump to bottom of displayed buffer.
 +           Increase the height of the popup window by one line.
@@ -83,7 +83,8 @@ a |Dictionary| containing any of the following entries:
 
                                                              *qfpreview.close*
     close           Key to press for closing the popup window.
-                    Default: x
+                    Note: CTRL-C always closes the popup window.
+                    Default: q
                                                         *qfpreview.scrolldown*
     scrolldown      Key to press for scrolling the text down.
                     Default: CTRL-J
