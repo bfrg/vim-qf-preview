@@ -77,13 +77,10 @@ dictionary containing any of the following entries:
 | `close`        | Close the popup window.                                          | `"q"`      |
 | `height`       | Number of text lines to display in the popup window.             | `15`       |
 | `offset`       | Number of buffer lines to show above the error line.             | `0`        |
-| `scrollbar`    | Display a scrollbar.                                             | `v:true`   |
 | `number`       | Enable the `'number'` column in the popup window.                | `v:false`  |
-| `mouseclick`   | Enable mouse clicks. Possible values: `none`, `click`, `button`¹ | `"button"` |
 | `sign`         | Place a `sign` at the error line in the displayed buffer.²       | `{}`       |
 
-¹See <kbd>:help qfpreview.mouseclick</kbd> for more details on each value.</br>
-²For valid `sign` attributes see <kbd>:help qfpreview.sign</kbd> and the
+¹For valid `sign` attributes see <kbd>:help qfpreview.sign</kbd> and the
 [examples](#examples) below.
 
 ### Highlighting
@@ -106,8 +103,6 @@ let g:qfpreview = {
     \ 'fullpageup': 'b',
     \ 'fullpagedown': 'f',
     \ 'close': 'q',
-    \ 'scrollbar': 0,
-    \ 'mouseclick': 'none',
     \ 'height': 20
     \ }
 ```

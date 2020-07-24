@@ -69,7 +69,7 @@ MOUSE EVENTS                                                 *qfpreview-mouse*
 
 While the mouse pointer is on the popup window, mouse scroll events will cause
 the text to scroll up or down as one would expect. Click on "X" in the top
-right corner to close the window. See also |qfpreview.mouseclick| below.
+right corner to close the window.
 
 ==============================================================================
 CONFIGURATION                                               *qfpreview-config*
@@ -114,20 +114,9 @@ a |Dictionary| containing any of the following entries:
     offset          Number of buffer lines to show above the error line when
                     the popup window is opened.
                     Default: 0
-                                                         *qfpreview.scrollbar*
-    scrollbar       Display a scrollbar. See |qfpreview-highlight| for highlight
-                    groups.
-                    Default: |v:true|
                                                             *qfpreview.number*
     number          Enable 'number' in the popup window.
                     Default: |v:false|
-                                                        *qfpreview.mouseclick*
-    mouseclick      Enable mouse clicks in the popup window. Possible values:
-                    "none"      Disable mouse clicks.
-                    "click"     Any mouse click in the popup window closes it.
-                    "button"    Display an X in the top-right corner that can
-                                be clicked to close the popup window.
-                    Default: "button"
                                                               *qfpreview.sign*
     sign            Place a |sign| at the error line in the displayed buffer.
                     This entry must be a dictionary with sign attributes. See
@@ -148,7 +137,6 @@ Examples ~
             \ 'fullpagedown': 'f',
             \ 'fullpageup': 'b',
             \ 'close': 'q',
-            \ 'mouseclick': 'none',
             \ 'number': v:true,
             \ 'offset': 5,
             \ 'height': 20
@@ -159,8 +147,6 @@ Examples ~
             \ 'scrolldown': "\<C-e>",
             \ 'scrollup': "\<C-y>",
             \ 'close': 'q',
-            \ 'mouseclick': 'click',
-            \ 'scrollbar': v:false,
             \ 'height': 10
             \ }
 <

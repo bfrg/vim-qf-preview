@@ -19,8 +19,6 @@ hi def link QfPreviewThumb      PmenuThumb
 
 let s:defaults = {
         \ 'height': 15,
-        \ 'mouseclick': 'button',
-        \ 'scrollbar': v:true,
         \ 'number': v:false,
         \ 'offset': 0,
         \ 'sign': {},
@@ -151,7 +149,7 @@ function! qfpreview#open(idx) abort
             \   'maxwidth': wininfo.width - 1,
             \   'firstline': firstline,
             \   'title': title,
-            \   'close': s:get('mouseclick'),
+            \   'close': 'button',
             \   'padding': [0,1,1,1],
             \   'border': [1,0,0,0],
             \   'borderchars': [' '],
@@ -160,7 +158,6 @@ function! qfpreview#open(idx) abort
             \   'filter': funcref('s:popup_filter', [firstline]),
             \   'filtermode': 'n',
             \   'highlight': 'QfPreview',
-            \   'scrollbar': s:get('scrollbar'),
             \   'borderhighlight': ['QfPreviewTitle'],
             \   'scrollbarhighlight': 'QfPreviewScrollbar',
             \   'thumbhighlight': 'QfPreviewThumb',
