@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Jun 29, 2020
+" Last Change:  Jul 24, 2020
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -85,7 +85,7 @@ function! qfpreview#open(idx) abort
     let qflist = wininfo.loclist ? getloclist(0) : getqflist()
     let qfitem = qflist[a:idx]
 
-    if !qfitem.valid
+    if !qfitem.valid || !qfitem.bufnr
         return
     endif
 
