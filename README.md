@@ -52,7 +52,6 @@ The following default popup mappings are provided:
 - Scroll up/down one half page: <kbd>Ctrl-u</kbd>, <kbd>Ctrl-d</kbd>
 - Scroll up/down one full page: <kbd>Ctrl-b</kbd>, <kbd>Ctrl-f</kbd>
 - Jump to first/last line of displayed buffer: <kbd>g</kbd>, <kbd>G</kbd>
-- Increase/decrease height of popup window: <kbd>+</kbd>, <kbd>-</kbd>
 - Close the popup window: <kbd>q</kbd>, <kbd>CTRL-C</kbd>
 - Jump back to error line after scrolling ("reset"): <kbd>r</kbd>
 

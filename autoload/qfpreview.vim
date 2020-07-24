@@ -33,15 +33,6 @@ let s:defaults = {
 
 let s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defaults[x])}
 
-function! s:setheight(winid, step) abort
-    let height = popup_getoptions(a:winid).minheight
-    let newheight = height + a:step > 0 ? height + a:step : 1
-    call popup_setoptions(a:winid, {'minheight': newheight, 'maxheight': newheight})
-    if !empty(s:get('sign')->get('text', ''))
-        call setwinvar(a:winid, '&signcolumn', 'number')
-    endif
-endfunction
-
 function! s:popup_filter(line, winid, key) abort
     if a:key ==# s:get('scrollup')
         call win_execute(a:winid, "normal! \<c-y>")
@@ -61,10 +52,6 @@ function! s:popup_filter(line, winid, key) abort
         call win_execute(a:winid, 'normal! gg')
     elseif a:key ==# 'G'
         call win_execute(a:winid, 'normal! G')
-    elseif a:key ==# '+'
-        call s:setheight(a:winid, 1)
-    elseif a:key ==# '-'
-        call s:setheight(a:winid, -1)
     elseif a:key ==# 'r'
         call popup_setoptions(a:winid, {'firstline': a:line})
         call popup_setoptions(a:winid, {'firstline': 0})

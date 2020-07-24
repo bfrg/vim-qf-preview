@@ -57,8 +57,6 @@ CTRL-B      Scroll popup window up one full page.
 CTRL-C, q   Close the popup window.
 g           Jump to first line of displayed buffer.
 G           Jump to bottom of displayed buffer.
-+           Increase the height of the popup window by one line.
--           Decrease the height of the popup window by one line.
 r           Jump back to error line after scrolling ("reset").
 
 The keys for scrolling and closing the popup window are configurable. See
