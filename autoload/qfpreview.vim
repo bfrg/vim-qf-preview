@@ -36,6 +36,8 @@ let s:defaults = {
 
 let s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defaults[x])}
 
+let s:winid = 0
+
 function s:reset(winid, line) abort
     call popup_setoptions(a:winid, {'firstline': a:line})
     call popup_setoptions(a:winid, {'firstline': 0})
@@ -129,7 +131,7 @@ function qfpreview#open(idx) abort
         return
     endif
 
-    silent let winid = popup_create(qfitem.bufnr, extend(opts, {
+    silent let s:winid = popup_create(qfitem.bufnr, extend(opts, {
             \   'col': wininfo.wincol,
             \   'minheight': height,
             \   'maxheight': height,
@@ -156,11 +158,11 @@ function qfpreview#open(idx) abort
             \ }))
 
     " Set firstline to zero to prevent jumps when calling win_execute() #4876
-    call popup_setoptions(winid, {'firstline': 0})
-    call setwinvar(winid, '&number', !!s:get('number'))
+    call popup_setoptions(s:winid, {'firstline': 0})
+    call setwinvar(s:winid, '&number', !!s:get('number'))
 
     if !empty(s:get('sign')->get('text', ''))
-        call setwinvar(winid, '&signcolumn', 'number')
+        call setwinvar(s:winid, '&signcolumn', 'number')
     endif
 
     if !empty(s:get('sign'))
@@ -168,7 +170,7 @@ function qfpreview#open(idx) abort
         call sign_place(0, 'PopUpQfPreview', 'QfErrorLine', qfitem.bufnr, {'lnum': lnum})
     endif
 
-    return winid
+    return s:winid
 endfunction
 
 let &cpoptions = s:save_cpo
