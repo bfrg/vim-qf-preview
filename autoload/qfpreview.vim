@@ -18,6 +18,7 @@ hi def link QfPreviewScrollbar  PmenuSbar
 hi def link QfPreviewThumb      PmenuThumb
 
 let s:defaults = {
+        \ 'mapping': v:false,
         \ 'height': 15,
         \ 'number': v:false,
         \ 'offset': 0,
@@ -195,7 +196,7 @@ function qfpreview#open(idx) abort
                 \   'border': [1,0,0,0],
                 \   'borderchars': [' '],
                 \   'moved': 'any',
-                \   'mapping': v:false,
+                \   'mapping': s:get('mapping'),
                 \   'filter': funcref('s:popup_filter', [firstline]),
                 \   'filtermode': 'n',
                 \   'highlight': 'QfPreview',

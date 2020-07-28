@@ -142,6 +142,10 @@ a |Dictionary| containing any of the following entries:
     matchcolumn     Highlight the column of the current quickfix item in the
                     popup window using the highlight group |QfPreviewColumn|.
                     Default: |v:false|
+                                                              *qfpreview.auto*
+    auto            Automatically open the preview popup on |CursorHold| in
+                    the quickfix window.
+                    Default: |v:false|
 
 ==============================================================================
 EXAMPLES                                                  *qfpreview-examples*
