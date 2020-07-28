@@ -49,11 +49,10 @@ popup window.
 The following default popup mappings are provided:
 
 - Scroll up/down one text line: <kbd>Ctrl-k</kbd>, <kbd>Ctrl-j</kbd>
-- Scroll up/down one half page: <kbd>Ctrl-u</kbd>, <kbd>Ctrl-d</kbd>
-- Scroll up/down one full page: <kbd>Ctrl-b</kbd>, <kbd>Ctrl-f</kbd>
-- Jump to first/last line of displayed buffer: <kbd>g</kbd>, <kbd>G</kbd>
-- Close the popup window: <kbd>q</kbd>, <kbd>CTRL-C</kbd>
-- Jump back to error line after scrolling ("reset"): <kbd>r</kbd>
+- Scroll to first/last line of displayed buffer: <kbd>Shift-Home</kbd>,
+  <kbd>Shift-End</kbd>
+- Scroll back to error line ("reset"): <kbd>r</kbd>
+- Close the popup window: <kbd>q</kbd>, <kbd>Ctrl-c</kbd>
 
 
 ## Configuration
@@ -61,23 +60,26 @@ The following default popup mappings are provided:
 ### b:qfpreview and g:qfpreview
 
 The default popup key mappings and the appearance of the popup window can be
-changed through the variable `b:qfpreview` in `after/ftplugin/qf.vim`, or
+configured through the variable `b:qfpreview` in `after/ftplugin/qf.vim`, or
 alternatively through the global variable `g:qfpreview`. The variable must be a
 dictionary containing any of the following entries:
 
-| Entry          | Description                                                      | Default    |
-| -------------- | ---------------------------------------------------------------- | ---------- |
-| `scrollup`     | Scroll buffer up one text line.                                  | `"\<C-k>"` |
-| `scrolldown`   | Scroll buffer down one text line.                                | `"\<C-j>"` |
-| `halfpageup`   | Scroll buffer up one half page.                                  | `"\<C-u>"` |
-| `halfpagedown` | Scroll buffer down one half page.                                | `"\<C-d>"` |
-| `fullpageup`   | Scroll buffer up one full page.                                  | `"\<C-b>"` |
-| `fullpagedown` | Scroll buffer down one full page.                                | `"\<C-f>"` |
-| `close`        | Close the popup window.                                          | `"q"`      |
-| `height`       | Number of text lines to display in the popup window.             | `15`       |
-| `offset`       | Number of buffer lines to show above the error line.             | `0`        |
-| `number`       | Enable the `'number'` column in the popup window.                | `v:false`  |
-| `sign`         | Place a `sign` at the error line in the displayed buffer.²       | `{}`       |
+| Entry          | Description                                                  | Default       |
+| -------------- | ------------------------------------------------------------ | ------------- |
+| `top`          | Scroll to the first line of the buffer.                      | `"\<S-Home>"` |
+| `bottom`       | Scroll to the bottom of the buffer.                          | `"\<S-End>"`  |
+| `scrollup`     | Scroll window up one text line.                              | `"\<C-k>"`    |
+| `scrolldown`   | Scroll window down one text line.                            | `"\<C-j>"`    |
+| `halfpageup`   | Scroll window up one half page.                              | none          |
+| `halfpagedown` | Scroll window down one half page.                            | none          |
+| `fullpageup`   | Scroll window up one full page.                              | none          |
+| `fullpagedown` | Scroll window down one full page.                            | none          |
+| `reset`        | Scroll window back to error line.                            | `"r"`         |
+| `close`        | Close the popup window.                                      | `"q"`         |
+| `height`       | Number of text lines to display in the popup window.         | `15`          |
+| `offset`       | Number of buffer lines to show above the error line.         | `0`           |
+| `number`       | Enable the `'number'` column in the popup window.            | `v:false`     |
+| `sign`         | Place a `sign` on the error line in the displayed buffer.¹   | `{}`          |
 
 ¹For valid `sign` attributes see <kbd>:help qfpreview.sign</kbd> and the
 [examples](#examples) below.
@@ -90,38 +92,33 @@ See <kbd>:help qfpreview-highlight</kbd> for more details.
 
 ### Examples
 
-1. Override the popup scrolling keys, close the window with <kbd>q</kbd>, and
-   remove both scrollbar and the "X" in the top-right corner of the popup
-   window:
-```vim
-let g:qfpreview = {
-    \ 'scrollup': 'k',
-    \ 'scrolldown': 'j',
-    \ 'halfpageup': 'u',
-    \ 'halfpagedown': 'd',
-    \ 'fullpageup': 'b',
-    \ 'fullpagedown': 'f',
-    \ 'close': 'q',
-    \ 'height': 20
-    \ }
-```
-
+1. Override the popup scrolling keys:
+   ```vim
+   let g:qfpreview = {
+       \ 'top': g,
+       \ 'bottom': G,
+       \ 'scrollup': 'k',
+       \ 'scrolldown': 'j',
+       \ 'halfpageup': 'u',
+       \ 'halfpagedown': 'd',
+       \ 'fullpageup': 'b',
+       \ 'fullpagedown': 'f'
+       \ }
+   ```
 2. Place a sign in the buffer at the error line and highlight the whole line
    using `CursorLine`:
-```vim
-let g:qfpreview = {'sign': {'linehl': 'CursorLine'}}
-```
-
+   ```vim
+   let g:qfpreview = {'sign': {'linehl': 'CursorLine'}}
+   ```
 3. Instead of highlighting the whole line, display a sign in the `'signcolumn'`:
-```vim
-let g:qfpreview = {'sign': {'text': '>>', 'texthl': 'Search'}}
-```
-
+   ```vim
+   let g:qfpreview = {'sign': {'text': '>>', 'texthl': 'Search'}}
+   ```
 4. Same as 3., but also enable the `'number'` column. In this case the placed
    sign is shown in the `'number'` column:
-```vim
-let g:qfpreview = {'number': 1, 'sign': {'text': '>>', 'texthl': 'Todo'}}
-```
+   ```vim
+   let g:qfpreview = {'number': 1, 'sign': {'text': '>>', 'texthl': 'Todo'}}
+   ```
 
 Screenshots of 2., 3. and 4.:
 ![out](https://user-images.githubusercontent.com/6266600/77472775-b4cdaa00-6e14-11ea-8abd-d55c47fdeda7.png)

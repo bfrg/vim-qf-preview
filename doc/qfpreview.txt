@@ -50,17 +50,12 @@ The following default keys can be used while the popup window is open:
 
 CTRL-J      Scroll popup window down one text line.
 CTRL-K      Scroll popup window up one text line.
-CTRL-D      Scroll popup window down one half page.
-CTRL-U      Scroll popup window up one half page.
-CTRL-F      Scroll popup window down one full page.
-CTRL-B      Scroll popup window up one full page.
+SHIFT-HOME  Scroll to first line of displayed buffer.
+SHIFT-END   Scroll to bottom of displayed buffer.
+r           Scroll back to error line ("reset").
 CTRL-C, q   Close the popup window.
-g           Jump to first line of displayed buffer.
-G           Jump to bottom of displayed buffer.
-r           Jump back to error line after scrolling ("reset").
 
-The keys for scrolling and closing the popup window are configurable. See
-|qfpreview-config| below.
+All keys are configurable. See |qfpreview-config| below.
 
 ==============================================================================
 MOUSE EVENTS                                                 *qfpreview-mouse*
@@ -92,19 +87,31 @@ a |Dictionary| containing any of the following entries:
                                                       *qfpreview.halfpagedown*
     halfpagedown    Key to press for scrolling the popup window one half page
                     down.
-                    Default: CTRL-D
+                    Default: none
                                                         *qfpreview.halfpageup*
     halfpageup      Key to press for scrolling the popup window one half page
                     up.
-                    Default: CTRL-U
+                    Default: none
                                                       *qfpreview.fullpagedown*
     fullpagedown    Key to press for scrolling the popup window one full page
                     down.
-                    Default: CTRL-F
+                    Default: none
                                                         *qfpreview.fullpageup*
     fullpageup      Key to press for scrolling the popup window one full page
                     up.
-                    Default: CTRL-B
+                    Default: none
+                                                               *qfpreview.top*
+    top             Key to press for scrolling the popup window to the top of
+                    the buffer.
+                    Default: SHIFT-HOME
+                                                            *qfpreview.bottom*
+    bottom          Key to press for scrolling the popup window to the bottom
+                    of the buffer.
+                    Default: SHIFT-END
+                                                             *qfpreview.reset*
+    reset           Key to press for scrolling the popup window back to the
+                    error line.
+                    Default: r
                                                             *qfpreview.height*
     height          Number of text lines to display in the popup window.
                     Default: 15
@@ -122,10 +129,10 @@ a |Dictionary| containing any of the following entries:
                     and the examples below.
                     Default: {}
 
-Examples ~
+==============================================================================
+EXAMPLES                                                  *qfpreview-examples*
 
-1. Override the popup scrolling keys, close the window with "q", and remove
-   both scrollbar and the "X" in the top-right corner of the popup window: >
+1. Override the popup scrolling keys: >
     " Option 1: in your vimrc
     let g:qfpreview = {
             \ 'scrolldown': 'j',
@@ -134,7 +141,6 @@ Examples ~
             \ 'halfpageup': 'u',
             \ 'fullpagedown': 'f',
             \ 'fullpageup': 'b',
-            \ 'close': 'q',
             \ 'number': v:true,
             \ 'offset': 5,
             \ 'height': 20
@@ -144,7 +150,7 @@ Examples ~
     let b:qfpreview = {
             \ 'scrolldown': "\<C-e>",
             \ 'scrollup': "\<C-y>",
-            \ 'close': 'q',
+            \ 'close': "\<Esc>",
             \ 'height': 10
             \ }
 <

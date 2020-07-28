@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Jul 24, 2020
+" Last Change:  Jul 28, 2020
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -24,48 +24,49 @@ let s:defaults = {
         \ 'sign': {},
         \ 'scrollup': "\<c-k>",
         \ 'scrolldown': "\<c-j>",
-        \ 'halfpageup': "\<c-u>",
-        \ 'halfpagedown': "\<c-d>",
-        \ 'fullpageup': "\<c-b>",
-        \ 'fullpagedown': "\<c-f>",
+        \ 'halfpageup': '',
+        \ 'halfpagedown': '',
+        \ 'fullpageup': '',
+        \ 'fullpagedown': '',
+        \ 'top': "\<s-home>",
+        \ 'bottom': "\<s-end>",
+        \ 'reset': 'r',
         \ 'close': 'q'
         \ }
 
 let s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defaults[x])}
 
-function! s:popup_filter(line, winid, key) abort
-    if a:key ==# s:get('scrollup')
-        call win_execute(a:winid, "normal! \<c-y>")
-    elseif a:key ==# s:get('scrolldown')
-        call win_execute(a:winid, "normal! \<c-e>")
-    elseif a:key ==# s:get('halfpageup')
-        call win_execute(a:winid, "normal! \<c-u>")
-    elseif a:key ==# s:get('halfpagedown')
-        call win_execute(a:winid, "normal! \<c-d>")
-    elseif a:key ==# s:get('fullpageup')
-        call win_execute(a:winid, "normal! \<c-b>")
-    elseif a:key ==# s:get('fullpagedown')
-        call win_execute(a:winid, "normal! \<c-f>")
-    elseif a:key ==# s:get('close')
-        call popup_close(a:winid)
-    elseif a:key ==# 'g'
-        call win_execute(a:winid, 'normal! gg')
-    elseif a:key ==# 'G'
-        call win_execute(a:winid, 'normal! G')
-    elseif a:key ==# 'r'
-        call popup_setoptions(a:winid, {'firstline': a:line})
-        call popup_setoptions(a:winid, {'firstline': 0})
-        " Note: after popup_setoptions() 'signcolumn' needs to be reset again
-        if !empty(s:get('sign')->get('text', ''))
-            call setwinvar(a:winid, '&signcolumn', 'number')
-        endif
-    else
-        return v:false
+function s:reset(winid, line) abort
+    call popup_setoptions(a:winid, {'firstline': a:line})
+    call popup_setoptions(a:winid, {'firstline': 0})
+    if !empty(s:get('sign')->get('text', '')) && !has('patch-8.2.1303')
+        call setwinvar(a:winid, '&signcolumn', 'number')
     endif
-    return v:true
 endfunction
 
-function! qfpreview#open(idx) abort
+function s:popup_filter(line, winid, key) abort
+    let mappings = {}
+    let mappings[s:get('close')]        =  {id -> popup_close(id)}
+    let mappings[s:get('top')]          =  {id -> win_execute(id, 'normal! gg')}
+    let mappings[s:get('bottom')]       =  {id -> win_execute(id, 'normal! G')}
+    let mappings[s:get('scrollup')]     =  {id -> win_execute(id, "normal! \<c-y>")}
+    let mappings[s:get('scrolldown')]   =  {id -> win_execute(id, "normal! \<c-e>")}
+    let mappings[s:get('halfpageup')]   =  {id -> win_execute(id, "normal! \<c-u>")}
+    let mappings[s:get('halfpagedown')] =  {id -> win_execute(id, "normal! \<c-d>")}
+    let mappings[s:get('fullpageup')]   =  {id -> win_execute(id, "normal! \<c-b>")}
+    let mappings[s:get('fullpagedown')] =  {id -> win_execute(id, "normal! \<c-f>")}
+    let mappings[s:get('reset')]        =  {id -> s:reset(id, a:line)}
+    call filter(mappings, '!empty(v:key)')
+
+    if has_key(mappings, a:key)
+        call get(mappings, a:key)(a:winid)
+        return v:true
+    endif
+
+    return v:false
+endfunction
+
+function qfpreview#open(idx) abort
     let wininfo = getwininfo(win_getid())[0]
     let qflist = wininfo.loclist ? getloclist(0) : getqflist()
     let qfitem = qflist[a:idx]
