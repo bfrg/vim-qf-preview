@@ -81,18 +81,18 @@ endfunction
 
 function s:popup_filter(line, winid, key) abort
     let mappings = {}
-    let mappings[s:get('close')]        =  {id -> popup_close(id)}
-    let mappings[s:get('top')]          =  {id -> win_execute(id, 'normal! gg')}
-    let mappings[s:get('bottom')]       =  {id -> win_execute(id, 'normal! G')}
-    let mappings[s:get('scrollup')]     =  {id -> win_execute(id, "normal! \<c-y>")}
-    let mappings[s:get('scrolldown')]   =  {id -> win_execute(id, "normal! \<c-e>")}
-    let mappings[s:get('halfpageup')]   =  {id -> win_execute(id, "normal! \<c-u>")}
-    let mappings[s:get('halfpagedown')] =  {id -> win_execute(id, "normal! \<c-d>")}
-    let mappings[s:get('fullpageup')]   =  {id -> win_execute(id, "normal! \<c-b>")}
-    let mappings[s:get('fullpagedown')] =  {id -> win_execute(id, "normal! \<c-f>")}
-    let mappings[s:get('reset')]        =  {id -> s:reset(id, a:line)}
-    let mappings[s:get('next')]         =  {id -> s:cycle(id,  1)}
-    let mappings[s:get('previous')]     =  {id -> s:cycle(id, -1)}
+    let mappings[s:get('close')]        = {id -> popup_close(id)}
+    let mappings[s:get('top')]          = {id -> win_execute(id, 'normal! gg')}
+    let mappings[s:get('bottom')]       = {id -> win_execute(id, 'normal! G')}
+    let mappings[s:get('scrollup')]     = {id -> win_execute(id, "normal! \<c-y>")}
+    let mappings[s:get('scrolldown')]   = {id -> win_execute(id, "normal! \<c-e>")}
+    let mappings[s:get('halfpageup')]   = {id -> win_execute(id, "normal! \<c-u>")}
+    let mappings[s:get('halfpagedown')] = {id -> win_execute(id, "normal! \<c-d>")}
+    let mappings[s:get('fullpageup')]   = {id -> win_execute(id, "normal! \<c-b>")}
+    let mappings[s:get('fullpagedown')] = {id -> win_execute(id, "normal! \<c-f>")}
+    let mappings[s:get('reset')]        = {id -> s:reset(id, a:line)}
+    let mappings[s:get('next')]         = {id -> s:cycle(id,  1)}
+    let mappings[s:get('previous')]     = {id -> s:cycle(id, -1)}
     call filter(mappings, '!empty(v:key)')
 
     if has_key(mappings, a:key)
@@ -104,11 +104,11 @@ function s:popup_filter(line, winid, key) abort
 endfunction
 
 function s:popup_cb(winid, result) abort
+    let s:qflist = []
     if !empty(s:get('sign'))
         call sign_unplace('PopUpQfPreview')
         call sign_undefine('QfErrorLine')
     endif
-    let s:qflist = []
 endfunction
 
 function qfpreview#open(idx) abort
