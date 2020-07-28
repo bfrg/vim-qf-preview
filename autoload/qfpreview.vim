@@ -38,6 +38,10 @@ let s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defau
 
 let s:winid = 0
 
+function s:error(msg)
+    echohl ErrorMsg | echomsg a:msg | echohl None
+endfunction
+
 function s:reset(winid, line) abort
     call popup_setoptions(a:winid, {'firstline': a:line})
     call popup_setoptions(a:winid, {'firstline': 0})
@@ -125,37 +129,39 @@ function qfpreview#open(idx) abort
                 \ 'pos': 'botleft'
                 \ }
     else
-        echohl ErrorMsg
-        echomsg 'qfpreview: Not enough space to display popup window.'
-        echohl None
-        return
+        return s:error('Not enough space to display preview popup')
     endif
 
-    silent let s:winid = popup_create(qfitem.bufnr, extend(opts, {
-            \   'col': wininfo.wincol,
-            \   'minheight': height,
-            \   'maxheight': height,
-            \   'minwidth': wininfo.width - 1,
-            \   'maxwidth': wininfo.width - 1,
-            \   'firstline': firstline,
-            \   'title': title,
-            \   'close': 'button',
-            \   'padding': [0,1,1,1],
-            \   'border': [1,0,0,0],
-            \   'borderchars': [' '],
-            \   'moved': 'any',
-            \   'mapping': v:false,
-            \   'filter': funcref('s:popup_filter', [firstline]),
-            \   'filtermode': 'n',
-            \   'highlight': 'QfPreview',
-            \   'borderhighlight': ['QfPreviewTitle'],
-            \   'scrollbarhighlight': 'QfPreviewScrollbar',
-            \   'thumbhighlight': 'QfPreviewThumb',
-            \   'callback': {... -> !empty(s:get('sign'))
-            \     ? [sign_unplace('PopUpQfPreview'), sign_undefine('QfErrorLine')]
-            \     : 0
-            \   }
-            \ }))
+    call popup_close(s:winid)
+    try
+        silent let s:winid = popup_create(qfitem.bufnr, extend(opts, {
+                \   'col': wininfo.wincol,
+                \   'minheight': height,
+                \   'maxheight': height,
+                \   'minwidth': wininfo.width - 1,
+                \   'maxwidth': wininfo.width - 1,
+                \   'firstline': firstline,
+                \   'title': title,
+                \   'close': 'button',
+                \   'padding': [0,1,1,1],
+                \   'border': [1,0,0,0],
+                \   'borderchars': [' '],
+                \   'moved': 'any',
+                \   'mapping': v:false,
+                \   'filter': funcref('s:popup_filter', [firstline]),
+                \   'filtermode': 'n',
+                \   'highlight': 'QfPreview',
+                \   'borderhighlight': ['QfPreviewTitle'],
+                \   'scrollbarhighlight': 'QfPreviewScrollbar',
+                \   'thumbhighlight': 'QfPreviewThumb',
+                \   'callback': {... -> !empty(s:get('sign'))
+                \     ? [sign_unplace('PopUpQfPreview'), sign_undefine('QfErrorLine')]
+                \     : 0
+                \   }
+                \ }))
+    catch /^Vim\%((\a\+)\)\=:E325:/
+        call s:error('E325: ATTENTION')
+    endtry
 
     " Set firstline to zero to prevent jumps when calling win_execute() #4876
     call popup_setoptions(s:winid, {'firstline': 0})
