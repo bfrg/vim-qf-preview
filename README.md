@@ -64,22 +64,24 @@ configured through the variable `b:qfpreview` in `after/ftplugin/qf.vim`, or
 alternatively through the global variable `g:qfpreview`. The variable must be a
 dictionary containing any of the following entries:
 
-| Entry          | Description                                                  | Default       |
-| -------------- | ------------------------------------------------------------ | ------------- |
-| `top`          | Scroll to the first line of the buffer.                      | `"\<S-Home>"` |
-| `bottom`       | Scroll to the bottom of the buffer.                          | `"\<S-End>"`  |
-| `scrollup`     | Scroll window up one text line.                              | `"\<C-k>"`    |
-| `scrolldown`   | Scroll window down one text line.                            | `"\<C-j>"`    |
-| `halfpageup`   | Scroll window up one half page.                              | none          |
-| `halfpagedown` | Scroll window down one half page.                            | none          |
-| `fullpageup`   | Scroll window up one full page.                              | none          |
-| `fullpagedown` | Scroll window down one full page.                            | none          |
-| `reset`        | Scroll window back to error line.                            | `"r"`         |
-| `close`        | Close the popup window.                                      | `"q"`         |
-| `height`       | Number of text lines to display in the popup window.         | `15`          |
-| `offset`       | Number of buffer lines to show above the error line.         | `0`           |
-| `number`       | Enable the `'number'` column in the popup window.            | `v:false`     |
-| `sign`         | Place a `sign` on the error line in the displayed buffer.¹   | `{}`          |
+| Entry          | Description                                                | Default       |
+| -------------- | ---------------------------------------------------------- | ------------- |
+| `top`          | Scroll to the first line of the buffer.                    | `"\<S-Home>"` |
+| `bottom`       | Scroll to the bottom of the buffer.                        | `"\<S-End>"`  |
+| `scrollup`     | Scroll window up one text line.                            | `"\<C-k>"`    |
+| `scrolldown`   | Scroll window down one text line.                          | `"\<C-j>"`    |
+| `halfpageup`   | Scroll window up one half page.                            | none          |
+| `halfpagedown` | Scroll window down one half page.                          | none          |
+| `fullpageup`   | Scroll window up one full page.                            | none          |
+| `fullpagedown` | Scroll window down one full page.                          | none          |
+| `reset`        | Scroll window back to error line.                          | `"r"`         |
+| `close`        | Close the popup window.                                    | `"q"`         |
+| `next`         | Navigate to next quickfix item in current list.            | none          |
+| `previous`     | Navigate to previous quickfix item in current list.        | none          |
+| `height`       | Number of text lines to display in the popup window.       | `15`          |
+| `offset`       | Number of buffer lines to show above the error line.       | `0`           |
+| `number`       | Enable the `'number'` column in the popup window.          | `v:false`     |
+| `sign`         | Place a `sign` on the error line in the displayed buffer.¹ | `{}`          |
 
 ¹For valid `sign` attributes see <kbd>:help qfpreview.sign</kbd> and the
 [examples](#examples) below.
@@ -102,7 +104,9 @@ See <kbd>:help qfpreview-highlight</kbd> for more details.
        \ 'halfpageup': 'u',
        \ 'halfpagedown': 'd',
        \ 'fullpageup': 'b',
-       \ 'fullpagedown': 'f'
+       \ 'fullpagedown': 'f',
+       \ 'next': 'n',
+       \ 'previous': 'p'
        \ }
    ```
 2. Place a sign in the buffer at the error line and highlight the whole line

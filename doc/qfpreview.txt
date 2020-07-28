@@ -112,6 +112,16 @@ a |Dictionary| containing any of the following entries:
     reset           Key to press for scrolling the popup window back to the
                     error line.
                     Default: r
+                                                              *qfpreview.next*
+    next            Key to press for jumping to the next quickfix item in the
+                    current list. This is the same as if you closed the popup
+                    window, moved the cursor to the next valid quickfix entry
+                    and opened it again.
+                    Default: none
+                                                          *qfpreview.previous*
+    previous        Key to press for jumping to the previous quickfix item in
+                    the current list.
+                    Default: none
                                                             *qfpreview.height*
     height          Number of text lines to display in the popup window.
                     Default: 15

@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Jul 28, 2020
+" Last Change:  Jul 29, 2020
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -31,12 +31,18 @@ let s:defaults = {
         \ 'top': "\<s-home>",
         \ 'bottom': "\<s-end>",
         \ 'reset': 'r',
-        \ 'close': 'q'
+        \ 'close': 'q',
+        \ 'next': '',
+        \ 'previous': ''
         \ }
 
 let s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defaults[x])}
 
+" winid of popup window
 let s:winid = 0
+
+" Save quickfix list while popup is open for cycling to next or previous item
+let s:qflist = []
 
 function s:error(msg)
     echohl ErrorMsg | echomsg a:msg | echohl None
@@ -48,6 +54,29 @@ function s:reset(winid, line) abort
     if !empty(s:get('sign')->get('text', '')) && !has('patch-8.2.1303')
         call setwinvar(a:winid, '&signcolumn', 'number')
     endif
+endfunction
+
+function s:cycle(winid, step) abort
+    let cur_pos = getpos('.')
+    let new_lnum = line('.') + a:step > line('$')
+            \ ? line('$')
+            \ : line('.') + a:step < 1 ? 1 : line('.') + a:step
+
+    while !s:qflist[new_lnum - 1].valid
+            \ && s:qflist[new_lnum - 1].bufnr < 1
+            \ && new_lnum > 0
+            \ && new_lnum < line('$')
+        let new_lnum += a:step
+    endwhile
+
+    if new_lnum == cur_pos[1] || !s:qflist[new_lnum - 1].valid || s:qflist[new_lnum - 1].bufnr < 1
+        return
+    endif
+
+    call popup_close(a:winid)
+    let cur_pos[1] = new_lnum
+    call setpos('.', cur_pos)
+    call qfpreview#open(line('.') - 1)
 endfunction
 
 function s:popup_filter(line, winid, key) abort
@@ -62,6 +91,8 @@ function s:popup_filter(line, winid, key) abort
     let mappings[s:get('fullpageup')]   =  {id -> win_execute(id, "normal! \<c-b>")}
     let mappings[s:get('fullpagedown')] =  {id -> win_execute(id, "normal! \<c-f>")}
     let mappings[s:get('reset')]        =  {id -> s:reset(id, a:line)}
+    let mappings[s:get('next')]         =  {id -> s:cycle(id,  1)}
+    let mappings[s:get('previous')]     =  {id -> s:cycle(id, -1)}
     call filter(mappings, '!empty(v:key)')
 
     if has_key(mappings, a:key)
@@ -72,12 +103,27 @@ function s:popup_filter(line, winid, key) abort
     return v:false
 endfunction
 
+function s:popup_cb(winid, result) abort
+    if !empty(s:get('sign'))
+        call sign_unplace('PopUpQfPreview')
+        call sign_undefine('QfErrorLine')
+    endif
+    let s:qflist = []
+endfunction
+
 function qfpreview#open(idx) abort
     let wininfo = getwininfo(win_getid())[0]
-    let qflist = wininfo.loclist ? getloclist(0) : getqflist()
-    let qfitem = qflist[a:idx]
 
+    if empty(s:qflist)
+        let s:qflist = wininfo.loclist ? getloclist(0) : getqflist()
+        if empty(s:qflist)
+            return
+        endif
+    endif
+
+    let qfitem = s:qflist[a:idx]
     if !qfitem.valid || !qfitem.bufnr
+        let s:qflist = []
         return
     endif
 
@@ -90,7 +136,7 @@ function qfpreview#open(idx) abort
     let title = printf('%s (%d/%d)',
             \ bufname(qfitem.bufnr)->fnamemodify(':~:.'),
             \ a:idx + 1,
-            \ len(qflist)
+            \ len(s:qflist)
             \ )
 
     " Truncate long titles at beginning
@@ -154,10 +200,7 @@ function qfpreview#open(idx) abort
                 \   'borderhighlight': ['QfPreviewTitle'],
                 \   'scrollbarhighlight': 'QfPreviewScrollbar',
                 \   'thumbhighlight': 'QfPreviewThumb',
-                \   'callback': {... -> !empty(s:get('sign'))
-                \     ? [sign_unplace('PopUpQfPreview'), sign_undefine('QfErrorLine')]
-                \     : 0
-                \   }
+                \   'callback': funcref('s:popup_cb')
                 \ }))
     catch /^Vim\%((\a\+)\)\=:E325:/
         call s:error('E325: ATTENTION')
