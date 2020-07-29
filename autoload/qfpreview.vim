@@ -107,7 +107,9 @@ function s:popup_cb(winid, result) abort
     let s:qflist = []
     if !empty(s:get('sign'))
         call sign_unplace('PopUpQfPreview')
-        call sign_undefine('QfErrorLine')
+        if !empty(sign_getdefined('QfErrorLine'))
+            call sign_undefine('QfErrorLine')
+        endif
     endif
 endfunction
 
@@ -129,7 +131,6 @@ function qfpreview#open(idx) abort
 
     let space_above = wininfo.winrow - 1
     let space_below = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
-    let lnum = qfitem.lnum < 1 ? 1 : qfitem.lnum
     let firstline = qfitem.lnum - s:get('offset') < 1 ? 1 : qfitem.lnum - s:get('offset')
     let height = s:get('height')
 
@@ -214,9 +215,9 @@ function qfpreview#open(idx) abort
         call setwinvar(s:winid, '&signcolumn', 'number')
     endif
 
-    if !empty(s:get('sign'))
+    if !empty(s:get('sign')) && qfitem.lnum > 0
         call sign_define('QfErrorLine', s:get('sign'))
-        call sign_place(0, 'PopUpQfPreview', 'QfErrorLine', qfitem.bufnr, {'lnum': lnum})
+        call sign_place(0, 'PopUpQfPreview', 'QfErrorLine', qfitem.bufnr, {'lnum': qfitem.lnum})
     endif
 
     return s:winid
