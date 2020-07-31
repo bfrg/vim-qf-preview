@@ -82,6 +82,7 @@ dictionary containing any of the following entries:
 | `offset`       | Number of buffer lines to show above the error line.       | `0`           |
 | `number`       | Enable the `'number'` column in the popup window.          | `v:false`     |
 | `sign`         | Place a `sign` on the error line in the displayed buffer.¹ | `{}`          |
+| `matchcolumn`  | Highlight column of current quickfix item in popup window. | `v:false`     |
 
 ¹For valid `sign` attributes see <kbd>:help qfpreview.sign</kbd> and the
 [examples](#examples) below.
@@ -89,8 +90,8 @@ dictionary containing any of the following entries:
 ### Highlighting
 
 The highlighting of the popup window can be configured through the highlighting
-groups `QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar` and `QfPreviewThumb`.
-See <kbd>:help qfpreview-highlight</kbd> for more details.
+groups `QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar`, `QfPreviewThumb` and
+`QfPreviewColumn`. See <kbd>:help qfpreview-highlight</kbd> for more details.
 
 ### Examples
 
