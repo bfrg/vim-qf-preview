@@ -138,6 +138,10 @@ a |Dictionary| containing any of the following entries:
                     the {dict} argument in |sign_define()| for valid entries
                     and the examples below.
                     Default: {}
+                                                       *qfpreview.matchcolumn*
+    matchcolumn     Highlight the column of the current quickfix item in the
+                    popup window using the highlight group |QfPreviewColumn|.
+                    Default: |v:false|
 
 ==============================================================================
 EXAMPLES                                                  *qfpreview-examples*
@@ -198,5 +202,9 @@ QfPreviewScrollbar  Highlight group name for the |popup-scrollbar|. The
 QfPreviewThumb      Highlight group name for the |popup-scrollbar| thumb. The
                     background color is what matters.
                     By default links to |hl-PmenuThumb|.
+                                                          *hl-QfPreviewColumn*
+QfPreviewColumn     Highlight group name for highlighting the column of the
+                    current quickfix item in the popup window.
+                    By default links to |hl-QuickFixLine|.
 
  vim:tw=78:et:ft=help:norl:
