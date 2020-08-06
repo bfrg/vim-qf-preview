@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Jul 31, 2020
+" Last Change:  Aug 6, 2020
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -214,6 +214,10 @@ function qfpreview#open(idx) abort
 
     if !empty(s:get('sign')->get('text', ''))
         call setwinvar(s:winid, '&signcolumn', 'number')
+    endif
+
+    if &g:breakindent
+        call setwinvar(s:winid, '&breakindent', 1)
     endif
 
     if !empty(s:get('sign')) && qfitem.lnum > 0
