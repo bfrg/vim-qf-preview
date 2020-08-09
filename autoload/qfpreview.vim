@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Aug 6, 2020
+" Last Change:  Aug 9, 2020
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -24,6 +24,7 @@ let s:defaults = {
         \ 'offset': 0,
         \ 'sign': {},
         \ 'matchcolumn': v:false,
+        \ 'delay': 500,
         \ 'scrollup': "\<c-k>",
         \ 'scrolldown': "\<c-j>",
         \ 'halfpageup': '',
@@ -45,6 +46,9 @@ let s:winid = 0
 
 " Save quickfix list while popup is open for cycling to next or previous item
 let s:qflist = []
+
+let s:timer = 0
+let s:lastpos = 0
 
 function s:error(msg)
     echohl ErrorMsg | echomsg a:msg | echohl None
@@ -231,6 +235,17 @@ function qfpreview#open(idx) abort
         call matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc', qfitem.lnum, qfitem.col), 1, -1, {'window': s:winid})
     endif
     return s:winid
+endfunction
+
+" Related issue: #6541
+function qfpreview#on_cursor_moved() abort
+    call timer_stop(s:timer)
+    let curpos = line('.')
+    if curpos != s:lastpos
+        let s:lastpos = curpos
+        call popup_close(s:winid)
+        let s:timer = timer_start(s:get('delay'), {-> qfpreview#open(curpos - 1)})
+    endif
 endfunction
 
 let &cpoptions = s:save_cpo

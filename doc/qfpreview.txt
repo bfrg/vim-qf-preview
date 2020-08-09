@@ -143,9 +143,15 @@ a |Dictionary| containing any of the following entries:
                     popup window using the highlight group |QfPreviewColumn|.
                     Default: |v:false|
                                                               *qfpreview.auto*
-    auto            Automatically open the preview popup on |CursorHold| in
-                    the quickfix window.
+    auto            Automatically open the preview popup on |CursorMoved| in
+                    the quickfix window after |qfpreview.delay| ms. Requires Vim
+                    >= 8.2.1377.
                     Default: |v:false|
+                                                             *qfpreview.delay*
+    delay           If this many milliseconds the cursor hasn't moved the
+                    preview popup automatically opens. This is similar to the
+                    'updatetime' option for the |CursorHold| event.
+                    Default: 500
 
 ==============================================================================
 EXAMPLES                                                  *qfpreview-examples*
