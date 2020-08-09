@@ -83,6 +83,8 @@ dictionary containing any of the following entries:
 | `number`       | Enable the `'number'` column in the popup window.          | `v:false`     |
 | `sign`         | Place a `sign` on the error line in the displayed buffer.¹ | `{}`          |
 | `matchcolumn`  | Highlight column of current quickfix item in popup window. | `v:false`     |
+| `auto`         | Automatically open preview popup (requires `>= 8.2.1377`). | `v:false`     |
+| `delay`        | Time in ms after which popup opens if cursor hasn't moved. | `500`         |
 
 ¹For valid `sign` attributes see <kbd>:help qfpreview.sign</kbd> and the
 [examples](#examples) below.
