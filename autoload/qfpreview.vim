@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Aug 11, 2020
+" Last Change:  Aug 19, 2020
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -18,7 +18,7 @@ hi def link QfPreviewScrollbar  PmenuSbar
 hi def link QfPreviewThumb      PmenuThumb
 hi def link QfPreviewColumn     QuickFixLine
 
-let s:defaults = {
+const s:defaults = {
         \ 'height': 15,
         \ 'number': v:false,
         \ 'offset': 0,
@@ -38,7 +38,7 @@ let s:defaults = {
         \ 'previous': ''
         \ }
 
-let s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defaults[x])}
+const s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defaults[x])}
 
 " winid of popup window
 let s:winid = 0
@@ -116,7 +116,7 @@ function s:popup_cb(winid, result) abort
 endfunction
 
 function qfpreview#open(idx) abort
-    let wininfo = getwininfo(win_getid())[0]
+    const wininfo = getwininfo(win_getid())[0]
 
     if empty(s:qflist)
         let s:qflist = wininfo.loclist ? getloclist(0) : getqflist()
@@ -125,15 +125,15 @@ function qfpreview#open(idx) abort
         endif
     endif
 
-    let qfitem = s:qflist[a:idx]
+    const qfitem = s:qflist[a:idx]
     if !qfitem.valid || !qfitem.bufnr
         let s:qflist = []
         return
     endif
 
-    let space_above = wininfo.winrow - 1
-    let space_below = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
-    let firstline = qfitem.lnum - s:get('offset') < 1 ? 1 : qfitem.lnum - s:get('offset')
+    const space_above = wininfo.winrow - 1
+    const space_below = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
+    const firstline = qfitem.lnum - s:get('offset') < 1 ? 1 : qfitem.lnum - s:get('offset')
     let height = s:get('height')
 
     let title = printf('%s (%d/%d)',
@@ -149,7 +149,7 @@ function qfpreview#open(idx) abort
 
     if space_above > height
         if space_above == height + 1
-            let height = height - 1
+            let height -= 1
         endif
         let opts = {
                 \ 'line': wininfo.winrow - 1,
