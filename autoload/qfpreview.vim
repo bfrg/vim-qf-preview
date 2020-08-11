@@ -3,7 +3,7 @@
 " File:         autoload/qfpreview.vim
 " Author:       bfrg <https://github.com/bfrg>
 " Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Aug 6, 2020
+" Last Change:  Aug 11, 2020
 " License:      Same as Vim itself (see :h license)
 " ==============================================================================
 
@@ -16,6 +16,7 @@ hi def link QfPreview           Pmenu
 hi def link QfPreviewTitle      Pmenu
 hi def link QfPreviewScrollbar  PmenuSbar
 hi def link QfPreviewThumb      PmenuThumb
+hi def link QfPreviewColumn     QuickFixLine
 
 let s:defaults = {
         \ 'height': 15,
@@ -226,7 +227,6 @@ function qfpreview#open(idx) abort
     endif
 
     if s:get('matchcolumn') && qfitem.lnum > 0 && qfitem.col > 0
-        hi link QfPreviewColumn QuickFixLine
         call matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc', qfitem.lnum, qfitem.col), 1, -1, {'window': s:winid})
     endif
     return s:winid
