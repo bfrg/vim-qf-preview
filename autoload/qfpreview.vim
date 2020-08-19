@@ -43,7 +43,7 @@ const s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:def
 " winid of popup window
 let s:winid = 0
 
-" Save quickfix list while popup is open for cycling to next or previous item
+" Save quickfix list while popup is open when going to next or previous item
 let s:qflist = []
 
 function s:error(msg)
@@ -227,7 +227,9 @@ function qfpreview#open(idx) abort
     endif
 
     if s:get('matchcolumn') && qfitem.lnum > 0 && qfitem.col > 0
-        call matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc', qfitem.lnum, qfitem.col), 1, -1, {'window': s:winid})
+        const max = getbufline(qfitem.bufnr, qfitem.lnum)[0]->len()
+        const col = qfitem.col >= max ? max : qfitem.col
+        call matchaddpos('QfPreviewColumn', [[qfitem.lnum, col]], 1, -1, {'window': s:winid})
     endif
     return s:winid
 endfunction
