@@ -229,7 +229,7 @@ function qfpreview#open(idx) abort
     if s:get('matchcolumn') && qfitem.lnum > 0 && qfitem.col > 0
         const max = getbufline(qfitem.bufnr, qfitem.lnum)[0]->len()
         const col = qfitem.col >= max ? max : qfitem.col
-        call matchaddpos('QfPreviewColumn', [[qfitem.lnum, col]], 1, -1, {'window': s:winid})
+        call matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc', qfitem.lnum, col), 1, -1, {'window': s:winid})
     endif
     return s:winid
 endfunction
