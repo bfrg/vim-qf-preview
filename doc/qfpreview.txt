@@ -8,7 +8,7 @@ License:    Same terms as Vim itself (see |license|)
 INTRODUCTION                                        *vim-qf-preview* *qfpreview*
 
 vim-qf-preview is a |ftplugin| for the |quickfix-window| and |location-list-window|
-to quickly preview the file with the quickfix error under the cursor in a
+to quickly preview the location of the quickfix error under the cursor in a
 |popup-window|.
 
 The popup window is opened directly above the quickfix window (or below,
@@ -71,8 +71,9 @@ b:qfpreview                                                      *b:qfpreview*
 g:qfpreview                                                      *g:qfpreview*
 
 The default key mappings and the appearance of the popup window can be changed
-through b:qfpreview in |qf.vim|, or through g:qfpreview. The variable must be
-a |Dictionary| containing any of the following entries:
+through the buffer variable b:qfpreview in |qf.vim|, or through global
+variabel g:qfpreview. The variable must be a |Dictionary| containing any of
+the following entries:
 
                                                              *qfpreview.close*
     close           Key to press for closing the popup window.
