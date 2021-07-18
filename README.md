@@ -131,26 +131,15 @@ Screenshots of 2., 3. and 4.:
 
 ## Installation
 
-### Manual Installation
-
 Run the following commands in your terminal:
 ```bash
 $ cd ~/.vim/pack/git-plugins/start
 $ git clone https://github.com/bfrg/vim-qf-preview
-$ vim -u NONE -c "helptags vim-qf-preview/doc" -c q
+$ vim -u NONE -c 'helptags vim-qf-preview/doc | quit'
 ```
 **Note:** The directory name `git-plugins` is arbitrary, you can pick any other
-name. For more details see <kbd>:help packages</kbd>.
-
-### Plugin Managers
-
-Assuming [vim-plug](https://github.com/junegunn/vim-plug) is your favorite
-plugin manager, add the following to your `vimrc`:
-```vim
-if has('patch-8.1.2250')
-    Plug 'bfrg/vim-qf-preview'
-endif
-```
+name. For more details see <kbd>:help packages</kbd>. Alternatively, use your
+favorite plugin manager.
 
 
 ## License
