@@ -1,16 +1,14 @@
-" ==============================================================================
-" Preview file with quickfix error in a popup window
-" File:         autoload/qfpreview.vim
-" Author:       bfrg <https://github.com/bfrg>
-" Website:      https://github.com/bfrg/vim-qf-preview
-" Last Change:  Jul 18, 2021
-" License:      Same as Vim itself (see :h license)
-" ==============================================================================
+vim9script
+# ==============================================================================
+# Preview file with quickfix error in a popup window
+# File:         autoload/qfpreview.vim
+# Author:       bfrg <https://github.com/bfrg>
+# Website:      https://github.com/bfrg/vim-qf-preview
+# Last Change:  Jul 21, 2021
+# License:      Same as Vim itself (see :h license)
+# ==============================================================================
 
 scriptencoding utf-8
-
-let s:save_cpo = &cpoptions
-set cpoptions&vim
 
 hi def link QfPreview           Pmenu
 hi def link QfPreviewTitle      Pmenu
@@ -18,221 +16,210 @@ hi def link QfPreviewScrollbar  PmenuSbar
 hi def link QfPreviewThumb      PmenuThumb
 hi def link QfPreviewColumn     QuickFixLine
 
-const s:defaults = {
-        \ 'height': 15,
-        \ 'number': v:false,
-        \ 'offset': 0,
-        \ 'sign': {},
-        \ 'matchcolumn': v:false,
-        \ 'scrollup': "\<c-k>",
-        \ 'scrolldown': "\<c-j>",
-        \ 'halfpageup': '',
-        \ 'halfpagedown': '',
-        \ 'fullpageup': '',
-        \ 'fullpagedown': '',
-        \ 'top': "\<s-home>",
-        \ 'bottom': "\<s-end>",
-        \ 'reset': 'r',
-        \ 'close': 'q',
-        \ 'next': '',
-        \ 'previous': ''
-        \ }
+const defaults: dict<any> = {
+    'height': 15,
+    'number': false,
+    'offset': 0,
+    'sign': {},
+    'matchcolumn': false,
+    'scrollup': "\<c-k>",
+    'scrolldown': "\<c-j>",
+    'halfpageup': '',
+    'halfpagedown': '',
+    'fullpageup': '',
+    'fullpagedown': '',
+    'top': "\<s-home>",
+    'bottom': "\<s-end>",
+    'reset': 'r',
+    'close': 'q',
+    'next': '',
+    'previous': ''
+}
 
-const s:get = {x -> get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(x, s:defaults[x])}
+def Get(key: string): any
+    return get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(key, defaults[key])
+enddef
 
-" winid of popup window
-let s:winid = 0
+# Window ID of preview popup window
+var popup_id: number = 0
 
-" Save quickfix list while popup is open when going to next or previous item
-let s:qflist = []
+# Cache the quickfix list while popup is open and cycling through item
+var qf_list: list<dict<any>> = []
 
-function s:error(msg)
-    echohl ErrorMsg | echomsg a:msg | echohl None
-endfunction
+def Error(...msg: list<any>)
+    echohl ErrorMsg | echomsg call('printf', msg) | echohl None
+enddef
 
-function s:reset(winid, line) abort
-    call popup_setoptions(a:winid, {'firstline': a:line})
-    call popup_setoptions(a:winid, {'firstline': 0})
-    if !empty(s:get('sign')->get('text', '')) && !has('patch-8.2.1303')
-        call setwinvar(a:winid, '&signcolumn', 'number')
+def Reset(winid: number, line: number)
+    popup_setoptions(winid, {'firstline': line})
+    popup_setoptions(winid, {'firstline': 0})
+    if !empty(Get('sign')->get('text', '')) && !has('patch-8.2.1303')
+        setwinvar(winid, '&signcolumn', 'number')
     endif
-endfunction
+enddef
 
-function s:cycle(winid, step) abort
-    let cur_pos = getpos('.')
-    let new_lnum = line('.') + a:step > line('$')
-            \ ? line('$')
-            \ : line('.') + a:step < 1 ? 1 : line('.') + a:step
+def Cycle(winid: number, step: number)
+    var cur_pos: list<number> = getpos('.')
+    var new_lnum: number = line('.') + step > line('$')
+        ? line('$')
+        : line('.') + step < 1 ? 1 : line('.') + step
 
-    while !s:qflist[new_lnum - 1].valid
-            \ && s:qflist[new_lnum - 1].bufnr < 1
+    while !qf_list[new_lnum - 1].valid
+            \ && qf_list[new_lnum - 1].bufnr < 1
             \ && new_lnum > 0
             \ && new_lnum < line('$')
-        let new_lnum += a:step
+        new_lnum += step
     endwhile
 
-    if new_lnum == cur_pos[1] || !s:qflist[new_lnum - 1].valid || s:qflist[new_lnum - 1].bufnr < 1
+    if new_lnum == cur_pos[1] || !qf_list[new_lnum - 1].valid || qf_list[new_lnum - 1].bufnr < 1
         return
     endif
 
-    call popup_close(a:winid)
-    let cur_pos[1] = new_lnum
-    call setpos('.', cur_pos)
-    call qfpreview#open(line('.') - 1)
-endfunction
+    popup_close(winid)
+    cur_pos[1] = new_lnum
+    setpos('.', cur_pos)
+    qfpreview#open(line('.') - 1)
+enddef
 
-function s:popup_filter(line, winid, key) abort
-    let mappings = {}
-    let mappings[s:get('close')]        = {id -> popup_close(id)}
-    let mappings[s:get('top')]          = {id -> win_execute(id, 'normal! gg')}
-    let mappings[s:get('bottom')]       = {id -> win_execute(id, 'normal! G')}
-    let mappings[s:get('scrollup')]     = {id -> win_execute(id, "normal! \<c-y>")}
-    let mappings[s:get('scrolldown')]   = {id -> win_execute(id, "normal! \<c-e>")}
-    let mappings[s:get('halfpageup')]   = {id -> win_execute(id, "normal! \<c-u>")}
-    let mappings[s:get('halfpagedown')] = {id -> win_execute(id, "normal! \<c-d>")}
-    let mappings[s:get('fullpageup')]   = {id -> win_execute(id, "normal! \<c-b>")}
-    let mappings[s:get('fullpagedown')] = {id -> win_execute(id, "normal! \<c-f>")}
-    let mappings[s:get('reset')]        = {id -> s:reset(id, a:line)}
-    let mappings[s:get('next')]         = {id -> s:cycle(id,  1)}
-    let mappings[s:get('previous')]     = {id -> s:cycle(id, -1)}
-    call filter(mappings, '!empty(v:key)')
+def Popup_filter(line: number, winid: number, key: string): bool
+    var mappings: dict<func> = {
+        [Get('close')]:        (id: number) => popup_close(id),
+        [Get('top')]:          (id: number) => win_execute(id, 'normal! gg'),
+        [Get('bottom')]:       (id: number) => win_execute(id, 'normal! G'),
+        [Get('scrollup')]:     (id: number) => win_execute(id, "normal! \<c-y>"),
+        [Get('scrolldown')]:   (id: number) => win_execute(id, "normal! \<c-e>"),
+        [Get('halfpageup')]:   (id: number) => win_execute(id, "normal! \<c-u>"),
+        [Get('halfpagedown')]: (id: number) => win_execute(id, "normal! \<c-d>"),
+        [Get('fullpageup')]:   (id: number) => win_execute(id, "normal! \<c-b>"),
+        [Get('fullpagedown')]: (id: number) => win_execute(id, "normal! \<c-f>"),
+        [Get('reset')]:        (id: number) => Reset(id, line),
+        [Get('next')]:         (id: number) => Cycle(id,  1),
+        [Get('previous')]:     (id: number) => Cycle(id, -1)
+    }
 
-    if has_key(mappings, a:key)
-        call get(mappings, a:key)(a:winid)
-        return v:true
+    filter(mappings, (k: string, _: func): bool => !empty(k))
+
+    if has_key(mappings, key)
+        get(mappings, key)(winid)
+        return true
     endif
 
-    return v:false
-endfunction
+    return false
+enddef
 
-function s:popup_cb(winid, result) abort
-    let s:qflist = []
-    if !empty(s:get('sign'))
-        call sign_unplace('PopUpQfPreview')
+def Popup_cb(winid: number, result: number)
+    qf_list = []
+    if !empty(Get('sign'))
+        sign_unplace('PopUpQfPreview')
         if !empty(sign_getdefined('QfErrorLine'))
-            call sign_undefine('QfErrorLine')
+            sign_undefine('QfErrorLine')
         endif
     endif
-endfunction
+enddef
 
-function qfpreview#open(idx) abort
-    const wininfo = getwininfo(win_getid())[0]
+def qfpreview#open(idx: number): number
+    const wininfo: dict<any> = getwininfo(win_getid())[0]
 
-    if empty(s:qflist)
-        let s:qflist = wininfo.loclist ? getloclist(0) : getqflist()
-        if empty(s:qflist)
-            return
+    if empty(qf_list)
+        qf_list = wininfo.loclist ? getloclist(0) : getqflist()
+        if empty(qf_list)
+            return 0
         endif
     endif
 
-    const qfitem = s:qflist[a:idx]
-    if !qfitem.valid || qfitem.bufnr < 1 || !bufexists(qfitem.bufnr)
-        let s:qflist = []
-        return
+    const qf_item: dict<any> = qf_list[idx]
+    if !qf_item.valid || qf_item.bufnr < 1 || !bufexists(qf_item.bufnr)
+        qf_list = []
+        return 0
     endif
 
-    const space_above = wininfo.winrow - 1
-    const space_below = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
-    const firstline = qfitem.lnum - s:get('offset') < 1 ? 1 : qfitem.lnum - s:get('offset')
-    let height = s:get('height')
+    const space_above: number = wininfo.winrow - 1
+    const space_below: number = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
+    const firstline: number = qf_item.lnum - Get('offset') < 1 ? 1 : qf_item.lnum - Get('offset')
+    var height: number = Get('height')
+    var opts: dict<any>
 
-    let title = printf('%s (%d/%d)',
-            \ bufname(qfitem.bufnr)->fnamemodify(':~:.'),
-            \ a:idx + 1,
-            \ len(s:qflist)
+    var title: string = printf('%s (%d/%d)',
+            \ bufname(qf_item.bufnr)->fnamemodify(':~:.'),
+            \ idx + 1,
+            \ len(qf_list)
             \ )
 
-    " Truncate long titles at beginning
+    # Truncate long titles at beginning
     if len(title) > wininfo.width
-        let title = '…' .. title[-(wininfo.width-4):]
+        title = '…' .. title[-(wininfo.width - 4) :]
     endif
 
     if space_above > height
         if space_above == height + 1
-            let height -= 1
+            height -= 1
         endif
-        let opts = {
-                \ 'line': wininfo.winrow - 1,
-                \ 'pos': 'botleft'
-                \ }
+        opts = {'line': wininfo.winrow - 1, 'pos': 'botleft'}
     elseif space_below >= height
-        let opts = {
-                \ 'line': wininfo.winrow + wininfo.height,
-                \ 'pos': 'topleft'
-                \ }
+        opts = {'line': wininfo.winrow + wininfo.height, 'pos': 'topleft'}
     elseif space_above > 5
-        let height = space_above - 2
-        let opts = {
-                \ 'line': wininfo.winrow - 1,
-                \ 'pos': 'botleft'
-                \ }
+        height = space_above - 2
+        opts = {'line': wininfo.winrow - 1, 'pos': 'botleft'}
     elseif space_below > 5
-        let height = space_below - 2
-        let opts = {
-                \ 'line': wininfo.winrow + wininfo.height,
-                \ 'pos': 'topleft'
-                \ }
+        height = space_below - 2
+        opts = {'line': wininfo.winrow + wininfo.height, 'pos': 'topleft'}
     elseif space_above <= 5 || space_below <= 5
-        let opts = {
-                \ 'line': &lines - &cmdheight,
-                \ 'pos': 'botleft'
-                \ }
+        opts = {'line': &lines - &cmdheight, 'pos': 'botleft'}
     else
-        return s:error('Not enough space to display preview popup')
+        Error('Not enough space to display preview popup')
+        return 0
     endif
 
-    call popup_close(s:winid)
+    popup_close(popup_id)
     try
-        silent let s:winid = popup_create(qfitem.bufnr, extend(opts, {
-                \   'col': wininfo.wincol,
-                \   'minheight': height,
-                \   'maxheight': height,
-                \   'minwidth': wininfo.width - 1,
-                \   'maxwidth': wininfo.width - 1,
-                \   'firstline': firstline,
-                \   'title': title,
-                \   'close': 'button',
-                \   'padding': [0,1,1,1],
-                \   'border': [1,0,0,0],
-                \   'borderchars': [' '],
-                \   'moved': 'any',
-                \   'mapping': v:false,
-                \   'filter': funcref('s:popup_filter', [firstline]),
-                \   'filtermode': 'n',
-                \   'highlight': 'QfPreview',
-                \   'borderhighlight': ['QfPreviewTitle'],
-                \   'scrollbarhighlight': 'QfPreviewScrollbar',
-                \   'thumbhighlight': 'QfPreviewThumb',
-                \   'callback': funcref('s:popup_cb')
-                \ }))
+        silent popup_id = popup_create(qf_item.bufnr, extend(opts, {
+            'col': wininfo.wincol,
+            'minheight': height,
+            'maxheight': height,
+            'minwidth': wininfo.width - 1,
+            'maxwidth': wininfo.width - 1,
+            'firstline': firstline,
+            'title': title,
+            'close': 'button',
+            'padding': [0, 1, 1, 1],
+            'border': [1, 0, 0, 0],
+            'borderchars': [' '],
+            'moved': 'any',
+            'mapping': false,
+            'filter': (winid: number, key: string): bool => Popup_filter(firstline, winid, key),
+            'filtermode': 'n',
+            'highlight': 'QfPreview',
+            'borderhighlight': ['QfPreviewTitle'],
+            'scrollbarhighlight': 'QfPreviewScrollbar',
+            'thumbhighlight': 'QfPreviewThumb',
+            'callback': Popup_cb
+         }))
     catch /^Vim\%((\a\+)\)\=:E325:/
-        call s:error('E325: ATTENTION')
+        Error('E325: ATTENTION')
     endtry
 
-    " Set firstline to zero to prevent jumps when calling win_execute() #4876
-    call popup_setoptions(s:winid, {'firstline': 0})
-    call setwinvar(s:winid, '&number', !!s:get('number'))
+    # Set firstline to zero to prevent jumps when calling win_execute() #4876
+    popup_setoptions(popup_id, {'firstline': 0})
+    setwinvar(popup_id, '&number', Get('number'))
 
-    if !empty(s:get('sign')->get('text', ''))
-        call setwinvar(s:winid, '&signcolumn', 'number')
+    if !empty(Get('sign')->get('text', ''))
+        setwinvar(popup_id, '&signcolumn', 'number')
     endif
 
     if &g:breakindent
-        call setwinvar(s:winid, '&breakindent', 1)
+        setwinvar(popup_id, '&breakindent', true)
     endif
 
-    if !empty(s:get('sign')) && qfitem.lnum > 0
-        call sign_define('QfErrorLine', s:get('sign'))
-        call sign_place(0, 'PopUpQfPreview', 'QfErrorLine', qfitem.bufnr, {'lnum': qfitem.lnum})
+    if !empty(Get('sign')) && qf_item.lnum > 0
+        sign_define('QfErrorLine', Get('sign'))
+        sign_place(0, 'PopUpQfPreview', 'QfErrorLine', qf_item.bufnr, {'lnum': qf_item.lnum})
     endif
 
-    if s:get('matchcolumn') && qfitem.lnum > 0 && qfitem.col > 0
-        const max = getbufline(qfitem.bufnr, qfitem.lnum)[0]->len()
-        const col = qfitem.col >= max ? max : qfitem.col
-        call matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc', qfitem.lnum, col), 1, -1, {'window': s:winid})
+    if Get('matchcolumn') && qf_item.lnum > 0 && qf_item.col > 0
+        const max: number = getbufline(qf_item.bufnr, qf_item.lnum)[0]->len()
+        const col: number = qf_item.col >= max ? max : qf_item.col
+        matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc', qf_item.lnum, col), 1, -1, {'window': popup_id})
     endif
-    return s:winid
-endfunction
 
-let &cpoptions = s:save_cpo
-unlet s:save_cpo
+    return popup_id
+enddef
