@@ -4,7 +4,7 @@ vim9script
 # File:         autoload/qfpreview.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  Jul 21, 2021
+# Last Change:  Jul 22, 2021
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -64,10 +64,9 @@ def Cycle(winid: number, step: number)
         ? line('$')
         : line('.') + step < 1 ? 1 : line('.') + step
 
-    while !qf_list[new_lnum - 1].valid
-            \ && qf_list[new_lnum - 1].bufnr < 1
-            \ && new_lnum > 0
-            \ && new_lnum < line('$')
+    while (!qf_list[new_lnum - 1].valid || qf_list[new_lnum - 1].bufnr < 1)
+          && new_lnum > 0
+          && new_lnum < line('$')
         new_lnum += step
     endwhile
 
