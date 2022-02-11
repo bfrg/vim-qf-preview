@@ -170,32 +170,28 @@ export def Open(idx: number): number
     endif
 
     popup_close(popup_id)
-    try
-        silent popup_id = popup_create(qf_item.bufnr, extend(opts, {
-            'col': wininfo.wincol,
-            'minheight': height,
-            'maxheight': height,
-            'minwidth': wininfo.width - 1,
-            'maxwidth': wininfo.width - 1,
-            'firstline': firstline,
-            'title': title,
-            'close': 'button',
-            'padding': [0, 1, 1, 1],
-            'border': [1, 0, 0, 0],
-            'borderchars': [' '],
-            'moved': 'any',
-            'mapping': false,
-            'filter': (winid: number, key: string): bool => Popup_filter(firstline, winid, key),
-            'filtermode': 'n',
-            'highlight': 'QfPreview',
-            'borderhighlight': ['QfPreviewTitle'],
-            'scrollbarhighlight': 'QfPreviewScrollbar',
-            'thumbhighlight': 'QfPreviewThumb',
-            'callback': Popup_cb
-         }))
-    catch /^Vim\%((\a\+)\)\=:E325:/
-        Error('E325: ATTENTION')
-    endtry
+    silent popup_id = popup_create(qf_item.bufnr, extend(opts, {
+        'col': wininfo.wincol,
+        'minheight': height,
+        'maxheight': height,
+        'minwidth': wininfo.width - 1,
+        'maxwidth': wininfo.width - 1,
+        'firstline': firstline,
+        'title': title,
+        'close': 'button',
+        'padding': [0, 1, 1, 1],
+        'border': [1, 0, 0, 0],
+        'borderchars': [' '],
+        'moved': 'any',
+        'mapping': false,
+        'filter': (winid: number, key: string): bool => Popup_filter(firstline, winid, key),
+        'filtermode': 'n',
+        'highlight': 'QfPreview',
+        'borderhighlight': ['QfPreviewTitle'],
+        'scrollbarhighlight': 'QfPreviewScrollbar',
+        'thumbhighlight': 'QfPreviewThumb',
+        'callback': Popup_cb
+    }))
 
     # Set firstline to zero to prevent jumps when calling win_execute() #4876
     popup_setoptions(popup_id, {'firstline': 0})
