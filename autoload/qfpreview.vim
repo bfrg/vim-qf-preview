@@ -4,7 +4,7 @@ vim9script
 # File:         autoload/qfpreview.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  Jul 22, 2021
+# Last Change:  Feb 10, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -77,7 +77,7 @@ def Cycle(winid: number, step: number)
     popup_close(winid)
     cur_pos[1] = new_lnum
     setpos('.', cur_pos)
-    qfpreview#open(line('.') - 1)
+    Open(line('.') - 1)
 enddef
 
 def Popup_filter(line: number, winid: number, key: string): bool
@@ -116,7 +116,7 @@ def Popup_cb(winid: number, result: number)
     endif
 enddef
 
-def qfpreview#open(idx: number): number
+export def Open(idx: number): number
     const wininfo: dict<any> = getwininfo(win_getid())[0]
 
     if empty(qf_list)
