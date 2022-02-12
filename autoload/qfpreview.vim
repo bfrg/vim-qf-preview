@@ -53,9 +53,6 @@ enddef
 def Reset(winid: number, line: number)
     popup_setoptions(winid, {'firstline': line})
     popup_setoptions(winid, {'firstline': 0})
-    if !empty(Get('sign')->get('text', '')) && !has('patch-8.2.1303')
-        setwinvar(winid, '&signcolumn', 'number')
-    endif
 enddef
 
 def Cycle(winid: number, step: number)
