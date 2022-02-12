@@ -117,7 +117,7 @@ def Popup_cb(winid: number, result: number)
 enddef
 
 export def Open(idx: number): number
-    const wininfo: dict<any> = getwininfo(win_getid())[0]
+    const wininfo: dict<any> = win_getid()->getwininfo()[0]
 
     if empty(qf_list)
         qf_list = wininfo.loclist ? getloclist(0) : getqflist()
