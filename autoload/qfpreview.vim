@@ -4,7 +4,7 @@ vim9script
 # File:         autoload/qfpreview.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  Feb 12, 2022
+# Last Change:  Mar 18, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -93,7 +93,7 @@ def Popup_filter(line: number, winid: number, key: string): bool
         [Get('previous')]:     (id: number) => Cycle(id, -1)
     }
 
-    filter(mappings, (k: string, _: func): bool => !empty(k))
+    filter(mappings, (k: string, F: func): bool => !empty(k))
 
     if has_key(mappings, key)
         get(mappings, key)(winid)
@@ -135,11 +135,7 @@ export def Open(idx: number): number
     var height: number = Get('height')
     var opts: dict<any>
 
-    var title: string = printf('%s (%d/%d)',
-        bufname(qf_item.bufnr)->fnamemodify(':~:.'),
-        idx + 1,
-        len(qf_list)
-    )
+    var title: string = printf('%s (%d/%d)', bufname(qf_item.bufnr)->fnamemodify(':~:.'), idx + 1, len(qf_list))
 
     # Truncate long titles at beginning
     if len(title) > wininfo.width
