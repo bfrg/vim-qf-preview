@@ -165,11 +165,12 @@ export def Open(idx: number): number
         'col': wininfo.wincol,
         'minheight': height,
         'maxheight': height,
-        'minwidth': wininfo.width - 1,
-        'maxwidth': wininfo.width - 1,
+        'minwidth': wininfo.width - 2,
+        'maxwidth': wininfo.width - 2,
         'firstline': firstline,
         'title': title,
         'close': 'button',
+        'hidden': true,
         'padding': [0, 1, 1, 1],
         'border': [1, 0, 0, 0],
         'borderchars': [' '],
@@ -200,6 +201,14 @@ export def Open(idx: number): number
         sign_define('QfErrorLine', Get('sign'))
         sign_place(0, 'PopUpQfPreview', 'QfErrorLine', qf_item.bufnr, {'lnum': qf_item.lnum})
     endif
+
+    if popup_getpos(popup_id).scrollbar > 0
+        popup_move(popup_id, {
+            'minwidth': wininfo.width - 3,
+            'maxwidth': wininfo.width - 3
+        })
+    endif
+    popup_show(popup_id)
 
     if Get('matchcolumn') && qf_item.lnum > 0 && qf_item.col > 0
         const max: number = getbufline(qf_item.bufnr, qf_item.lnum)[0]->len()
