@@ -4,7 +4,7 @@ vim9script
 # File:         autoload/qfpreview.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  Mar 18, 2022
+# Last Change:  Apr 5, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -78,25 +78,23 @@ def Cycle(winid: number, step: number)
 enddef
 
 def Popup_filter(line: number, winid: number, key: string): bool
-    var mappings: dict<func> = {
-        [Get('close')]:        (id: number) => popup_close(id),
-        [Get('top')]:          (id: number) => win_execute(id, 'normal! gg'),
-        [Get('bottom')]:       (id: number) => win_execute(id, 'normal! G'),
-        [Get('scrollup')]:     (id: number) => win_execute(id, "normal! \<c-y>"),
-        [Get('scrolldown')]:   (id: number) => win_execute(id, "normal! \<c-e>"),
-        [Get('halfpageup')]:   (id: number) => win_execute(id, "normal! \<c-u>"),
-        [Get('halfpagedown')]: (id: number) => win_execute(id, "normal! \<c-d>"),
-        [Get('fullpageup')]:   (id: number) => win_execute(id, "normal! \<c-b>"),
-        [Get('fullpagedown')]: (id: number) => win_execute(id, "normal! \<c-f>"),
-        [Get('reset')]:        (id: number) => Reset(id, line),
-        [Get('next')]:         (id: number) => Cycle(id,  1),
-        [Get('previous')]:     (id: number) => Cycle(id, -1)
-    }
+    var maps: dict<func> = {}
+    maps[Get('close')]        = (id: number) => popup_close(id)
+    maps[Get('top')]          = (id: number) => win_execute(id, 'normal! gg')
+    maps[Get('bottom')]       = (id: number) => win_execute(id, 'normal! G')
+    maps[Get('scrollup')]     = (id: number) => win_execute(id, "normal! \<c-y>")
+    maps[Get('scrolldown')]   = (id: number) => win_execute(id, "normal! \<c-e>")
+    maps[Get('halfpageup')]   = (id: number) => win_execute(id, "normal! \<c-u>")
+    maps[Get('halfpagedown')] = (id: number) => win_execute(id, "normal! \<c-d>")
+    maps[Get('fullpageup')]   = (id: number) => win_execute(id, "normal! \<c-b>")
+    maps[Get('fullpagedown')] = (id: number) => win_execute(id, "normal! \<c-f>")
+    maps[Get('reset')]        = (id: number) => Reset(id, line)
+    maps[Get('next')]         = (id: number) => Cycle(id,  1)
+    maps[Get('previous')]     = (id: number) => Cycle(id, -1)
+    filter(maps, (k: string, F: func): bool => !empty(k))
 
-    filter(mappings, (k: string, F: func): bool => !empty(k))
-
-    if has_key(mappings, key)
-        get(mappings, key)(winid)
+    if has_key(maps, key)
+        get(maps, key)(winid)
         return true
     endif
 
