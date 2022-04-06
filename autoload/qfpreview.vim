@@ -4,7 +4,7 @@ vim9script
 # File:         autoload/qfpreview.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  Apr 5, 2022
+# Last Change:  Apr 6, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -211,9 +211,8 @@ export def Open(idx: number): number
     popup_show(popup_id)
 
     if Get('matchcolumn') && qf_item.lnum > 0 && qf_item.col > 0
-        const max: number = getbufline(qf_item.bufnr, qf_item.lnum)[0]->len()
-        const col: number = qf_item.col >= max ? max : qf_item.col
-        matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc', qf_item.lnum, col), 1, -1, {'window': popup_id})
+        const pattern: string = printf('\%%%dl\%%%d%s', qf_item.lnum, qf_item.col, qf_item.vcol ? 'v' : 'c')
+        matchadd('QfPreviewColumn', pattern, 1, -1, {'window': popup_id})
     endif
 
     return popup_id
