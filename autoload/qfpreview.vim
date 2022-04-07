@@ -4,7 +4,7 @@ vim9script
 # File:         autoload/qfpreview.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  Apr 6, 2022
+# Last Change:  Apr 7, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -48,6 +48,18 @@ var qf_list: list<dict<any>> = []
 
 def Error(...msg: list<any>)
     echohl ErrorMsg | echomsg call('printf', msg) | echohl None
+enddef
+
+def Display2byte(str: string, virtcol: number): number
+    const ts_old: number = &tabstop
+    &tabstop = 8
+    var col: number
+    try
+        col = match(str, '\%' .. virtcol .. 'v') + 1
+    finally
+        &tabstop = ts_old
+    endtry
+    return col
 enddef
 
 def Reset(winid: number, line: number)
@@ -211,19 +223,34 @@ export def Open(idx: number): number
     popup_show(popup_id)
 
     if Get('matchcolumn') && qf_item.lnum > 0 && qf_item.col > 0
-        const bufline: string = getbufline(qf_item.bufnr, qf_item.lnum)[0]
-        const max: number = strlen(bufline)
+        var lines: list<string> = getbufline(qf_item.bufnr, qf_item.lnum, qf_item.end_lnum > 0 ? qf_item.end_lnum : qf_item.lnum)
         var col: number = qf_item.col
-        if qf_item.vcol
-            const ts_old: number = &tabstop
-            &tabstop = 8
-            try
-                col = match(bufline, printf('\%%%dv', qf_item.col)) + 1
-            finally
-                &tabstop = ts_old
-            endtry
+        const max_col: number = strlen(lines[0])
+        var end_col: number = qf_item.end_col
+
+        if qf_item.vcol == 1
+            col = Display2byte(lines[0], qf_item.col)
+            if qf_item.end_col > 0
+                end_col = Display2byte(lines[-1], qf_item.end_col)
+            endif
         endif
-        matchaddpos('QfPreviewColumn', [[qf_item.lnum, col > max ? max : col]], 1, -1, {'window': popup_id})
+
+        if col > max_col
+            col = max_col
+        endif
+
+        if qf_item.end_col > 0
+            const max_end_col: number = strlen(lines[-1]) + 1
+            if end_col > max_end_col
+                end_col = max_end_col
+            endif
+            lines[-1] = strpart(lines[-1], 0, end_col - 1)
+            lines[0] = strpart(lines[0], col - 1)
+            const charlen: number = join(lines, "\n")->strcharlen()
+            matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc\_.\{%d}', qf_item.lnum, col, charlen), 1, -1, {'window': popup_id})
+        else
+            matchaddpos('QfPreviewColumn', [[qf_item.lnum, col]], 1, -1, {'window': popup_id})
+        endif
     endif
 
     return popup_id
