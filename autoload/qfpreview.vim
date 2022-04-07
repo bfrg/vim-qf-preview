@@ -223,7 +223,7 @@ export def Open(idx: number): number
                 &tabstop = ts_old
             endtry
         endif
-        matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc', qf_item.lnum, col > max ? max : col), 1, -1, {'window': popup_id})
+        matchaddpos('QfPreviewColumn', [[qf_item.lnum, col > max ? max : col]], 1, -1, {'window': popup_id})
     endif
 
     return popup_id
