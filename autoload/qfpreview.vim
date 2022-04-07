@@ -211,8 +211,19 @@ export def Open(idx: number): number
     popup_show(popup_id)
 
     if Get('matchcolumn') && qf_item.lnum > 0 && qf_item.col > 0
-        const pattern: string = printf('\%%%dl\%%%d%s', qf_item.lnum, qf_item.col, qf_item.vcol ? 'v' : 'c')
-        matchadd('QfPreviewColumn', pattern, 1, -1, {'window': popup_id})
+        const bufline: string = getbufline(qf_item.bufnr, qf_item.lnum)[0]
+        const max: number = strlen(bufline)
+        var col: number = qf_item.col
+        if qf_item.vcol
+            const ts_old: number = &tabstop
+            &tabstop = 8
+            try
+                col = match(bufline, printf('\%%%dv', qf_item.col)) + 1
+            finally
+                &tabstop = ts_old
+            endtry
+        endif
+        matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc', qf_item.lnum, col > max ? max : col), 1, -1, {'window': popup_id})
     endif
 
     return popup_id
