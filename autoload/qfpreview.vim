@@ -4,7 +4,7 @@ vim9script
 # File:         autoload/qfpreview.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  Apr 7, 2022
+# Last Change:  Apr 12, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -115,11 +115,9 @@ enddef
 
 def Popup_cb(winid: number, result: number)
     qf_list = []
-    if !empty(Get('sign'))
-        sign_unplace('PopUpQfPreview')
-        if !empty(sign_getdefined('QfErrorLine'))
-            sign_undefine('QfErrorLine')
-        endif
+    sign_unplace('PopUpQfPreview')
+    if !empty(sign_getdefined('QfErrorLine'))
+        sign_undefine('QfErrorLine')
     endif
 enddef
 
