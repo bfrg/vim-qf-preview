@@ -4,7 +4,7 @@ vim9script
 # File:         autoload/qfpreview.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  Apr 12, 2022
+# Last Change:  May 19, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -17,23 +17,23 @@ hi def link QfPreviewThumb      PmenuThumb
 hi def link QfPreviewColumn     QuickFixLine
 
 const defaults: dict<any> = {
-    'height': 15,
-    'number': false,
-    'offset': 0,
-    'sign': {},
-    'matchcolumn': false,
-    'scrollup': "\<c-k>",
-    'scrolldown': "\<c-j>",
-    'halfpageup': '',
-    'halfpagedown': '',
-    'fullpageup': '',
-    'fullpagedown': '',
-    'top': "\<s-home>",
-    'bottom': "\<s-end>",
-    'reset': 'r',
-    'close': 'q',
-    'next': '',
-    'previous': ''
+    height: 15,
+    number: false,
+    offset: 0,
+    sign: {},
+    matchcolumn: false,
+    scrollup: "\<c-k>",
+    scrolldown: "\<c-j>",
+    halfpageup: '',
+    halfpagedown: '',
+    fullpageup: '',
+    fullpagedown: '',
+    top: "\<s-home>",
+    bottom: "\<s-end>",
+    reset: 'r',
+    close: 'q',
+    next: '',
+    previous: ''
 }
 
 def Get(key: string): any
@@ -63,8 +63,8 @@ def Display2byte(str: string, virtcol: number): number
 enddef
 
 def Reset(winid: number, line: number)
-    popup_setoptions(winid, {'firstline': line})
-    popup_setoptions(winid, {'firstline': 0})
+    popup_setoptions(winid, {firstline: line})
+    popup_setoptions(winid, {firstline: 0})
 enddef
 
 def Cycle(winid: number, step: number)
@@ -154,17 +154,17 @@ export def Open(idx: number): number
         if space_above == height + 1
             height -= 1
         endif
-        opts = {'line': wininfo.winrow - 1, 'pos': 'botleft'}
+        opts = {line: wininfo.winrow - 1, pos: 'botleft'}
     elseif space_below >= height
-        opts = {'line': wininfo.winrow + wininfo.height, 'pos': 'topleft'}
+        opts = {line: wininfo.winrow + wininfo.height, pos: 'topleft'}
     elseif space_above > 5
         height = space_above - 2
-        opts = {'line': wininfo.winrow - 1, 'pos': 'botleft'}
+        opts = {line: wininfo.winrow - 1, pos: 'botleft'}
     elseif space_below > 5
         height = space_below - 2
-        opts = {'line': wininfo.winrow + wininfo.height, 'pos': 'topleft'}
+        opts = {line: wininfo.winrow + wininfo.height, pos: 'topleft'}
     elseif space_above <= 5 || space_below <= 5
-        opts = {'line': &lines - &cmdheight, 'pos': 'botleft'}
+        opts = {line: &lines - &cmdheight, pos: 'botleft'}
     else
         Error('Not enough space to display preview popup')
         return 0
@@ -172,31 +172,31 @@ export def Open(idx: number): number
 
     popup_close(popup_id)
     silent popup_id = popup_create(qf_item.bufnr, extend(opts, {
-        'col': wininfo.wincol,
-        'minheight': height,
-        'maxheight': height,
-        'minwidth': wininfo.width - 2,
-        'maxwidth': wininfo.width - 2,
-        'firstline': firstline,
-        'title': title,
-        'close': 'button',
-        'hidden': true,
-        'padding': [0, 1, 1, 1],
-        'border': [1, 0, 0, 0],
-        'borderchars': [' '],
-        'moved': 'any',
-        'mapping': false,
-        'filter': (winid: number, key: string): bool => Popup_filter(firstline, winid, key),
-        'filtermode': 'n',
-        'highlight': 'QfPreview',
-        'borderhighlight': ['QfPreviewTitle'],
-        'scrollbarhighlight': 'QfPreviewScrollbar',
-        'thumbhighlight': 'QfPreviewThumb',
-        'callback': Popup_cb
+        col: wininfo.wincol,
+        minheight: height,
+        maxheight: height,
+        minwidth: wininfo.width - 2,
+        maxwidth: wininfo.width - 2,
+        firstline: firstline,
+        title: title,
+        close: 'button',
+        hidden: true,
+        padding: [0, 1, 1, 1],
+        border: [1, 0, 0, 0],
+        borderchars: [' '],
+        moved: 'any',
+        mapping: false,
+        filter: (winid: number, key: string): bool => Popup_filter(firstline, winid, key),
+        filtermode: 'n',
+        highlight: 'QfPreview',
+        borderhighlight: ['QfPreviewTitle'],
+        scrollbarhighlight: 'QfPreviewScrollbar',
+        thumbhighlight: 'QfPreviewThumb',
+        callback: Popup_cb
     }))
 
     # Set firstline to zero to prevent jumps when calling win_execute() #4876
-    popup_setoptions(popup_id, {'firstline': 0})
+    popup_setoptions(popup_id, {firstline: 0})
     setwinvar(popup_id, '&number', Get('number'))
 
     if !empty(Get('sign')->get('text', ''))
@@ -209,13 +209,13 @@ export def Open(idx: number): number
 
     if !empty(Get('sign')) && qf_item.lnum > 0
         sign_define('QfErrorLine', Get('sign'))
-        sign_place(0, 'PopUpQfPreview', 'QfErrorLine', qf_item.bufnr, {'lnum': qf_item.lnum})
+        sign_place(0, 'PopUpQfPreview', 'QfErrorLine', qf_item.bufnr, {lnum: qf_item.lnum})
     endif
 
     if popup_getpos(popup_id).scrollbar > 0
         popup_move(popup_id, {
-            'minwidth': wininfo.width - 3,
-            'maxwidth': wininfo.width - 3
+            minwidth: wininfo.width - 3,
+            maxwidth: wininfo.width - 3
         })
     endif
     popup_show(popup_id)
@@ -245,9 +245,9 @@ export def Open(idx: number): number
             lines[-1] = strpart(lines[-1], 0, end_col - 1)
             lines[0] = strpart(lines[0], col - 1)
             const charlen: number = join(lines, "\n")->strcharlen()
-            matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc\_.\{%d}', qf_item.lnum, col, charlen), 1, -1, {'window': popup_id})
+            matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc\_.\{%d}', qf_item.lnum, col, charlen), 1, -1, {window: popup_id})
         else
-            matchaddpos('QfPreviewColumn', [[qf_item.lnum, col]], 1, -1, {'window': popup_id})
+            matchaddpos('QfPreviewColumn', [[qf_item.lnum, col]], 1, -1, {window: popup_id})
         endif
     endif
 
