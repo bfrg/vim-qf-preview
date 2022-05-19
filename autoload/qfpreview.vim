@@ -46,8 +46,8 @@ var popup_id: number = 0
 # Cache the quickfix list while popup is open and cycling through item
 var qf_list: list<dict<any>> = []
 
-def Error(...msg: list<any>)
-    echohl ErrorMsg | echomsg call('printf', msg) | echohl None
+def Error(msg: string)
+    echohl ErrorMsg | echomsg msg | echohl None
 enddef
 
 def Display2byte(str: string, virtcol: number): number
@@ -55,7 +55,7 @@ def Display2byte(str: string, virtcol: number): number
     &tabstop = 8
     var col: number
     try
-        col = match(str, '\%' .. virtcol .. 'v') + 1
+        col = match(str, $'\%{virtcol}v') + 1
     finally
         &tabstop = ts_old
     endtry
@@ -245,7 +245,7 @@ export def Open(idx: number): number
             lines[-1] = strpart(lines[-1], 0, end_col - 1)
             lines[0] = strpart(lines[0], col - 1)
             const charlen: number = join(lines, "\n")->strcharlen()
-            matchadd('QfPreviewColumn', printf('\%%%dl\%%%dc\_.\{%d}', qf_item.lnum, col, charlen), 1, -1, {window: popup_id})
+            matchadd('QfPreviewColumn', $'\%{qf_item.lnum}l\%{col}c\_.\{{{charlen}}}', 1, -1, {window: popup_id})
         else
             matchaddpos('QfPreviewColumn', [[qf_item.lnum, col]], 1, -1, {window: popup_id})
         endif
