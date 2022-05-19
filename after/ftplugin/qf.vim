@@ -4,12 +4,12 @@ vim9script
 # File:         after/ftplugin/qf.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  Feb 10, 2022
+# Last Change:  May 19, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
 # Stop here if user doesn't want ftplugin mappings
-if get(g:, 'no_plugin_maps') || !has('patch-8.2.4337')
+if get(g:, 'no_plugin_maps')
     finish
 endif
 
