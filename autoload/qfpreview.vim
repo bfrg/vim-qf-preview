@@ -244,7 +244,7 @@ export def Open(idx: number): number
             endif
             lines[-1] = strpart(lines[-1], 0, end_col - 1)
             lines[0] = strpart(lines[0], col - 1)
-            const charlen: number = join(lines, "\n")->strcharlen()
+            const charlen: number = lines->join("\n")->strcharlen()
             matchadd('QfPreviewColumn', $'\%{qf_item.lnum}l\%{col}c\_.\{{{charlen}}}', 1, -1, {window: popup_id})
         else
             matchaddpos('QfPreviewColumn', [[qf_item.lnum, col]], 1, -1, {window: popup_id})
