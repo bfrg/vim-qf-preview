@@ -146,7 +146,7 @@ export def Open(idx: number): number
     var title: string = printf('%s (%d/%d)', qf_item.bufnr->bufname()->fnamemodify(':~:.'), idx + 1, len(qf_list))
 
     # Truncate long titles at beginning
-    if len(title) > wininfo.width
+    if strwidth(title) > wininfo.width
         title = '…' .. title[-(wininfo.width - 4) :]
     endif
 
