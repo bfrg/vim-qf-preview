@@ -36,7 +36,7 @@ const defaults: dict<any> = {
     previous: ''
 }
 
-def Get(key: string): any
+def Getopt(key: string): any
     return get(b:, 'qfpreview', get(g:, 'qfpreview', {}))->get(key, defaults[key])
 enddef
 
@@ -91,18 +91,18 @@ enddef
 
 def Popup_filter(line: number, winid: number, key: string): bool
     var maps: dict<func> = {}
-    maps[Get('close')]        = (id: number) => popup_close(id)
-    maps[Get('top')]          = (id: number) => win_execute(id, 'normal! gg')
-    maps[Get('bottom')]       = (id: number) => win_execute(id, 'normal! G')
-    maps[Get('scrollup')]     = (id: number) => win_execute(id, "normal! \<c-y>")
-    maps[Get('scrolldown')]   = (id: number) => win_execute(id, "normal! \<c-e>")
-    maps[Get('halfpageup')]   = (id: number) => win_execute(id, "normal! \<c-u>")
-    maps[Get('halfpagedown')] = (id: number) => win_execute(id, "normal! \<c-d>")
-    maps[Get('fullpageup')]   = (id: number) => win_execute(id, "normal! \<c-b>")
-    maps[Get('fullpagedown')] = (id: number) => win_execute(id, "normal! \<c-f>")
-    maps[Get('reset')]        = (id: number) => Reset(id, line)
-    maps[Get('next')]         = (id: number) => Cycle(id,  1)
-    maps[Get('previous')]     = (id: number) => Cycle(id, -1)
+    maps[Getopt('close')]        = (id: number) => popup_close(id)
+    maps[Getopt('top')]          = (id: number) => win_execute(id, 'normal! gg')
+    maps[Getopt('bottom')]       = (id: number) => win_execute(id, 'normal! G')
+    maps[Getopt('scrollup')]     = (id: number) => win_execute(id, "normal! \<c-y>")
+    maps[Getopt('scrolldown')]   = (id: number) => win_execute(id, "normal! \<c-e>")
+    maps[Getopt('halfpageup')]   = (id: number) => win_execute(id, "normal! \<c-u>")
+    maps[Getopt('halfpagedown')] = (id: number) => win_execute(id, "normal! \<c-d>")
+    maps[Getopt('fullpageup')]   = (id: number) => win_execute(id, "normal! \<c-b>")
+    maps[Getopt('fullpagedown')] = (id: number) => win_execute(id, "normal! \<c-f>")
+    maps[Getopt('reset')]        = (id: number) => Reset(id, line)
+    maps[Getopt('next')]         = (id: number) => Cycle(id,  1)
+    maps[Getopt('previous')]     = (id: number) => Cycle(id, -1)
     filter(maps, (k: string, F: func): bool => !empty(k))
 
     if has_key(maps, key)
@@ -139,8 +139,8 @@ export def Open(idx: number): number
 
     const space_above: number = wininfo.winrow - 1
     const space_below: number = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
-    const firstline: number = qf_item.lnum - Get('offset') < 1 ? 1 : qf_item.lnum - Get('offset')
-    var height: number = Get('height')
+    const firstline: number = qf_item.lnum - Getopt('offset') < 1 ? 1 : qf_item.lnum - Getopt('offset')
+    var height: number = Getopt('height')
     var opts: dict<any>
 
     var title: string = printf('%s (%d/%d)', qf_item.bufnr->bufname()->fnamemodify(':~:.'), idx + 1, len(qf_list))
@@ -197,9 +197,9 @@ export def Open(idx: number): number
 
     # Set firstline to zero to prevent jumps when calling win_execute() #4876
     popup_setoptions(popup_id, {firstline: 0})
-    setwinvar(popup_id, '&number', Get('number'))
+    setwinvar(popup_id, '&number', Getopt('number'))
 
-    if !empty(Get('sign')->get('text', ''))
+    if !empty(Getopt('sign')->get('text', ''))
         setwinvar(popup_id, '&signcolumn', 'number')
     endif
 
@@ -207,8 +207,8 @@ export def Open(idx: number): number
         setwinvar(popup_id, '&breakindent', true)
     endif
 
-    if !empty(Get('sign')) && qf_item.lnum > 0
-        sign_define('QfErrorLine', Get('sign'))
+    if !empty(Getopt('sign')) && qf_item.lnum > 0
+        sign_define('QfErrorLine', Getopt('sign'))
         sign_place(0, 'PopUpQfPreview', 'QfErrorLine', qf_item.bufnr, {lnum: qf_item.lnum})
     endif
 
@@ -220,7 +220,7 @@ export def Open(idx: number): number
     endif
     popup_show(popup_id)
 
-    if Get('matchcolumn') && qf_item.lnum > 0 && qf_item.col > 0
+    if Getopt('matchcolumn') && qf_item.lnum > 0 && qf_item.col > 0
         var lines: list<string> = getbufline(qf_item.bufnr, qf_item.lnum, qf_item.end_lnum > 0 ? qf_item.end_lnum : qf_item.lnum)
         var col: number = qf_item.col
         const max_col: number = strlen(lines[0])
