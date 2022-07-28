@@ -148,41 +148,42 @@ the following entries:
 EXAMPLES                                                  *qfpreview-examples*
 
 1. Override the popup scrolling keys: >
-    " Option 1: in your vimrc
-    let g:qfpreview = {
-            \ 'scrolldown': 'j',
-            \ 'scrollup': 'k',
-            \ 'halfpagedown': 'd',
-            \ 'halfpageup': 'u',
-            \ 'fullpagedown': 'f',
-            \ 'fullpageup': 'b',
-            \ 'number': v:true,
-            \ 'offset': 5,
-            \ 'height': 20
-            \ }
+    vim9script
+    # Option 1: in your vimrc
+    g:qfpreview = {
+        scrolldown: 'j',
+        scrollup: 'k',
+        halfpagedown: 'd',
+        halfpageup: 'u',
+        fullpagedown: 'f',
+        fullpageup: 'b',
+        number: v:true,
+        offset: 5,
+        height: 20
+    }
 
-    " Option 2: in ~/.vim/after/ftplugin/qf.vim
-    let b:qfpreview = {
-            \ 'scrolldown': "\<C-e>",
-            \ 'scrollup': "\<C-y>",
-            \ 'close': "\<Esc>",
-            \ 'height': 10
-            \ }
+    # Option 2: in ~/.vim/after/ftplugin/qf.vim
+    b:qfpreview = {
+        scrolldown: "\<C-e>",
+        scrollup: "\<C-y>",
+        close: "\<Esc>",
+        height: 10
+    }
 <
 2. Place a sign in the buffer at the error line and highlight the whole line
    using |hl-CursorLine|: >
-    let g:qfpreview = {'sign': {'linehl': 'CursorLine'}}
+    g:qfpreview = {sign: {linehl: 'CursorLine'}}
 <
 3. Instead of highlighting the whole line, display a sign in the
    'signcolumn': >
-    let g:qfpreview = {'sign': {'text': '>>', 'texthl': 'Todo'}}
+    g:qfpreview = {sign: {text: '>>', texthl: 'Todo'}}
 <
 4. Same as 3., but also enable the 'number' column. In this case the placed
    sign is shown in the 'number' column: >
-    let g:qfpreview = {
-        \ 'number': 1,
-        \ 'sign': {'text': '>>', 'texthl': 'Search'}
-        \ }
+    g:qfpreview = {
+        number: 1,
+        sign: {text: '>>', texthl: 'Search'}
+    }
 <
 ==============================================================================
 HIGHLIGHTING                                             *qfpreview-highlight*

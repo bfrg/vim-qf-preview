@@ -14,7 +14,7 @@ with the quickfix item under the cursor in a popup window.
 
 ## Requirements
 
-Vim `>= 8.1.2250`
+Vim `>= 9.0.0`
 
 
 ## Usage
@@ -97,32 +97,33 @@ groups `QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar`, `QfPreviewThumb` and
 
 1. Override the popup scrolling keys:
    ```vim
-   let g:qfpreview = {
-       \ 'top': g,
-       \ 'bottom': G,
-       \ 'scrollup': 'k',
-       \ 'scrolldown': 'j',
-       \ 'halfpageup': 'u',
-       \ 'halfpagedown': 'd',
-       \ 'fullpageup': 'b',
-       \ 'fullpagedown': 'f',
-       \ 'next': 'n',
-       \ 'previous': 'p'
-       \ }
+   vim9script
+   g:qfpreview = {
+       top: g,
+       bottom: G,
+       scrollup: 'k',
+       scrolldown: 'j',
+       halfpageup: 'u',
+       halfpagedown: 'd',
+       fullpageup: 'b',
+       fullpagedown: 'f',
+       next: 'n',
+       previous: 'p'
+   }
    ```
 2. Place a sign in the buffer at the error line and highlight the whole line
    using `CursorLine`:
    ```vim
-   let g:qfpreview = {'sign': {'linehl': 'CursorLine'}}
+   g:qfpreview = {sign: {linehl: 'CursorLine'}}
    ```
 3. Instead of highlighting the whole line, display a sign in the `'signcolumn'`:
    ```vim
-   let g:qfpreview = {'sign': {'text': '>>', 'texthl': 'Search'}}
+   g:qfpreview = {sign: {text: '>>', texthl: 'Search'}}
    ```
 4. Same as 3., but also enable the `'number'` column. In this case the placed
    sign is shown in the `'number'` column:
    ```vim
-   let g:qfpreview = {'number': 1, 'sign': {'text': '>>', 'texthl': 'Todo'}}
+   g:qfpreview = {number: 1, sign: {text: '>>', texthl: 'Todo'}}
    ```
 
 Screenshots of 2., 3. and 4.:
