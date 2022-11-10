@@ -10,11 +10,13 @@ vim9script
 
 scriptencoding utf-8
 
-hi def link QfPreview           Pmenu
-hi def link QfPreviewTitle      Pmenu
-hi def link QfPreviewScrollbar  PmenuSbar
-hi def link QfPreviewThumb      PmenuThumb
-hi def link QfPreviewColumn     QuickFixLine
+hlset([
+    {name: 'QfPreview',          linksto: 'Pmenu',        default: true},
+    {name: 'QfPreviewTitle',     linksto: 'Pmenu',        default: true},
+    {name: 'QfPreviewScrollbar', linksto: 'PmenuSbar',    default: true},
+    {name: 'QfPreviewThumb',     linksto: 'PmenuThumb',   default: true},
+    {name: 'QfPreviewColumn',    linksto: 'QuickFixLine', default: true},
+])
 
 const defaults: dict<any> = {
     height: 15,
