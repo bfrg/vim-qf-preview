@@ -207,6 +207,7 @@ export def Open(idx: number): number
     # Set firstline to zero to prevent jumps when calling win_execute() #4876
     popup_setoptions(popup_id, {firstline: 0})
     setwinvar(popup_id, '&number', Getopt('number'))
+    setwinvar(popup_id, '&smoothscroll', true)
 
     if !empty(Getopt('sign')->get('text', ''))
         setwinvar(popup_id, '&signcolumn', 'number')
