@@ -4,7 +4,7 @@ vim9script
 # File:         autoload/qfpreview.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  June 6, 2022
+# Last Change:  Nov 10, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -143,7 +143,7 @@ export def Open(idx: number): number
     var height: number = Getopt('height')
     var opts: dict<any>
 
-    var title: string = printf('%s (%d/%d)', qf_item.bufnr->bufname()->fnamemodify(':~:.'), idx + 1, len(qf_list))
+    var title: string = $'{qf_item.bufnr->bufname()->fnamemodify(':~:.')} ({idx + 1}/{len(qf_list)})'
 
     # Truncate long titles at beginning
     if strwidth(title) > wininfo.width
