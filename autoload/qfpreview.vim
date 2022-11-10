@@ -143,9 +143,9 @@ export def Open(idx: number): number
     const space_below: number = &lines - (wininfo.winrow + wininfo.height - 1) - &cmdheight
     const firstline: number = qf_item.lnum - Getopt('offset') < 1 ? 1 : qf_item.lnum - Getopt('offset')
     var height: number = Getopt('height')
-    var opts: dict<any>
-
     var title: string = $'{qf_item.bufnr->bufname()->fnamemodify(':~:.')} ({idx + 1}/{len(qf_list)})'
+    var line: number
+    var pos: string
 
     # Truncate long titles at beginning
     if strwidth(title) > wininfo.width
@@ -156,24 +156,31 @@ export def Open(idx: number): number
         if space_above == height + 1
             height -= 1
         endif
-        opts = {line: wininfo.winrow - 1, pos: 'botleft'}
+        line = wininfo.winrow - 1
+        pos = 'botleft'
     elseif space_below >= height
-        opts = {line: wininfo.winrow + wininfo.height, pos: 'topleft'}
+        line = wininfo.winrow + wininfo.height
+        pos = 'topleft'
     elseif space_above > 5
         height = space_above - 2
-        opts = {line: wininfo.winrow - 1, pos: 'botleft'}
+        line = wininfo.winrow - 1
+        pos = 'botleft'
     elseif space_below > 5
         height = space_below - 2
-        opts = {line: wininfo.winrow + wininfo.height, pos: 'topleft'}
+        line = wininfo.winrow + wininfo.height
+        pos = 'topleft'
     elseif space_above <= 5 || space_below <= 5
-        opts = {line: &lines - &cmdheight, pos: 'botleft'}
+        line = &lines - &cmdheight
+        pos = 'botleft'
     else
         Error('Not enough space to display preview popup')
         return 0
     endif
 
     popup_close(popup_id)
-    silent popup_id = popup_create(qf_item.bufnr, extend(opts, {
+    silent popup_id = popup_create(qf_item.bufnr, {
+        pos: pos,
+        line: line,
         col: wininfo.wincol,
         minheight: height,
         maxheight: height,
@@ -195,7 +202,7 @@ export def Open(idx: number): number
         scrollbarhighlight: 'QfPreviewScrollbar',
         thumbhighlight: 'QfPreviewThumb',
         callback: Popup_cb
-    }))
+    })
 
     # Set firstline to zero to prevent jumps when calling win_execute() #4876
     popup_setoptions(popup_id, {firstline: 0})
