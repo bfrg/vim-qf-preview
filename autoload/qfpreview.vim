@@ -21,9 +21,9 @@ hlset([
 const defaults: dict<any> = {
     height: 15,
     number: false,
-    offset: 0,
-    sign: {},
-    matchcolumn: false,
+    offset: 3,
+    sign: {linehl: 'CursorLine'},
+    matchcolumn: true,
     scrollup: "\<c-k>",
     scrolldown: "\<c-j>",
     halfpageup: '',

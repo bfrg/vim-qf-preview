@@ -124,22 +124,22 @@ the following entries:
     height          Number of text lines to display in the popup window.
                     Default: 15
                                                             *qfpreview.offset*
-    offset          Number of buffer lines to show above the error line when
-                    the popup window is opened.
-                    Default: 0
+    offset          Number of buffer lines to show above the quickfix location
+                    in the popup window.
+                    Default: 3
                                                             *qfpreview.number*
     number          Enable 'number' in the popup window.
-                    Default: |v:false|
+                    Default: |false|
                                                               *qfpreview.sign*
-    sign            Place a |sign| at the error line in the displayed buffer.
-                    This entry must be a dictionary with sign attributes. See
-                    the {dict} argument in |sign_define()| for valid entries
-                    and the examples below.
-                    Default: {}
+    sign            Place a |sign| at the quickfix location in the displayed
+                    buffer. This entry must be a dictionary with sign
+                    attributes. See the {dict} argument in |sign_define()| for
+                    valid entries as well as the examples below.
+                    Default: `{linehl: 'CursorLine'}`
                                                        *qfpreview.matchcolumn*
     matchcolumn     Highlight the column of the current quickfix item in the
                     popup window using the highlight group |QfPreviewColumn|.
-                    Default: |v:false|
+                    Default: |true|
 
 ==============================================================================
 EXAMPLES                                                  *qfpreview-examples*
@@ -164,21 +164,16 @@ EXAMPLES                                                  *qfpreview-examples*
         scrolldown: "\<C-e>",
         scrollup: "\<C-y>",
         close: "\<Esc>",
-        height: 10
+        height: 20
     }
 <
-2. Place a sign in the buffer at the error line and highlight the whole line
-   using |hl-CursorLine|: >
-    g:qfpreview = {sign: {linehl: 'CursorLine'}}
+2. Instead of displaying a cursorline, display a sign in the 'signcolumn': >
+    g:qfpreview = {sign: {text: '>>', texthl: 'Search'}}
 <
-3. Instead of highlighting the whole line, display a sign in the
-   'signcolumn': >
-    g:qfpreview = {sign: {text: '>>', texthl: 'Todo'}}
-<
-4. Same as 3., but also enable the 'number' column. In this case the placed
-   sign is shown in the 'number' column: >
+4. Same as 2., but also enable the 'number' column. The placed sign is
+   displayed in the 'number' column: >
     g:qfpreview = {
-        number: 1,
+        number: true,
         sign: {text: '>>', texthl: 'Search'}
     }
 <
