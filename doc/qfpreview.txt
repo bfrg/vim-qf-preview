@@ -11,11 +11,9 @@ vim-qf-preview is a |ftplugin| for the |quickfix-window| and |location-list-wind
 to quickly preview the location of the quickfix error under the cursor in a
 |popup-window|.
 
-The popup window is opened directly above the quickfix window (or below,
-depending on its position), without rearranging the current window layout.
-
-Moving the cursor in any direction while the popup window is displayed will
-close it.
+The popup window is opened directly above the quickfix window, without
+rearranging the current window layout. Moving the cursor in any direction
+closes the popup window.
 
 ==============================================================================
 MAPPINGS                                                  *qfpreview-mappings*
@@ -23,17 +21,16 @@ MAPPINGS                                                  *qfpreview-mappings*
 Quickfix window ~
 
 <plug>(qf-preview-open)                              *<plug>(qf-preview-open)*
-            Open a popup window with the file containing the quickfix error
-            the cursor is currently on. The window will be scrolled such that
-            the buffer line with the error is at the top of the popup window.
+            Preview the file under the cursor at the current quickfix location
+            in a popup window. The window will be scrolled such that the
+            buffer line with the error is at the top of the popup window.
 
             Note: To avoid conflicts with other plugins, the key mapping is
             not bound to any key-sequence by default. You will first have to
             bind <plug>(qf-preview-open) to a key of your choice.
 
             For example, to open the popup window with "p", add the following
-            to |qf.vim|: >
-                " in ~/.vim/after/ftplugin/qf.vim
+            to |qf.vim|, for example, in ~/.vim/after/ftplugin/qf.vim: >
                 nmap <buffer> p <plug>(qf-preview-open)
 <
             Or alternatively, if you prefer keeping your plugin settings in
@@ -61,8 +58,8 @@ All keys are configurable. See |qfpreview-config| below.
 MOUSE EVENTS                                                 *qfpreview-mouse*
 
 While the mouse pointer is on the popup window, mouse scroll events will cause
-the text to scroll up or down as one would expect. Click on "X" in the top
-right corner to close the window.
+the text to scroll up or down as one would expect. Clicking on "X" in the top
+right corner will close the window.
 
 ==============================================================================
 CONFIGURATION                                               *qfpreview-config*
@@ -188,7 +185,7 @@ EXAMPLES                                                  *qfpreview-examples*
 ==============================================================================
 HIGHLIGHTING                                             *qfpreview-highlight*
 
-The following highlighting groups are used by the plugin:
+The following highlighting groups are used for the popup window:
                                                                 *hl-QfPreview*
 QfPreview           Normal text in the popup window. This is the equivalent of
                     the |hl-Normal| highlight group in regular windows.

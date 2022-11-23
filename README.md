@@ -1,7 +1,7 @@
 # vim-qf-preview
 
 A plugin for the quickfix and location list window to quickly preview the file
-with the quickfix item under the cursor in a popup window.
+under the cursor at the current quickfix location in a popup window.
 
 <dl>
   <p align="center">
@@ -10,11 +10,6 @@ with the quickfix item under the cursor in a popup window.
   </a>
   </p>
 </dl>
-
-
-## Requirements
-
-Vim `>= 9.0.0`
 
 
 ## Usage
@@ -39,10 +34,10 @@ augroup qfpreview
 augroup END
 ```
 
-Now navigate the cursor in the quickfix window to the desired error and press
-<kbd>p</kbd> to open a popup window with the file containing the error. The
-window is scrolled such that the buffer line with the error is at the top of the
-popup window.
+In the quickfix window navigate the cursor to the desired error and press
+<kbd>p</kbd> to preview the file at the current quickfix location in a popup
+window. The window is scrolled such that the buffer line with the error is at
+the top of the popup window.
 
 ### Popup window mappings
 
@@ -80,9 +75,9 @@ dictionary containing any of the following entries:
 | `previous`     | Navigate to previous quickfix item in current list.        | none          |
 | `height`       | Number of text lines to display in the popup window.       | `15`          |
 | `offset`       | Number of buffer lines to show above the error line.       | `0`           |
-| `number`       | Enable the `'number'` column in the popup window.          | `v:false`     |
+| `number`       | Enable the `'number'` column in the popup window.          | `false`       |
 | `sign`         | Place a `sign` on the error line in the displayed buffer.¹ | `{}`          |
-| `matchcolumn`  | Highlight column of current quickfix item in popup window. | `v:false`     |
+| `matchcolumn`  | Highlight column of current quickfix item in popup window. | `false`       |
 
 ¹For valid `sign` attributes see <kbd>:help qfpreview.sign</kbd> and the
 [examples](#examples) below.
