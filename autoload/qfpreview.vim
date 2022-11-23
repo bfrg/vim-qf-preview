@@ -4,7 +4,7 @@ vim9script
 # File:         autoload/qfpreview.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  Nov 10, 2022
+# Last Change:  Nov 23, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -64,11 +64,6 @@ def Display2byte(str: string, virtcol: number): number
     return col
 enddef
 
-def Reset(winid: number, line: number)
-    popup_setoptions(winid, {firstline: line})
-    popup_setoptions(winid, {firstline: 0})
-enddef
-
 def Cycle(winid: number, step: number)
     var cur_pos: list<number> = getpos('.')
     var new_lnum: number = line('.') + step > line('$')
@@ -92,27 +87,35 @@ def Cycle(winid: number, step: number)
 enddef
 
 def Popup_filter(line: number, winid: number, key: string): bool
-    var maps: dict<func> = {}
-    maps[Getopt('close')]        = (id: number) => popup_close(id)
-    maps[Getopt('top')]          = (id: number) => win_execute(id, 'normal! gg')
-    maps[Getopt('bottom')]       = (id: number) => win_execute(id, 'normal! G')
-    maps[Getopt('scrollup')]     = (id: number) => win_execute(id, "normal! \<c-y>")
-    maps[Getopt('scrolldown')]   = (id: number) => win_execute(id, "normal! \<c-e>")
-    maps[Getopt('halfpageup')]   = (id: number) => win_execute(id, "normal! \<c-u>")
-    maps[Getopt('halfpagedown')] = (id: number) => win_execute(id, "normal! \<c-d>")
-    maps[Getopt('fullpageup')]   = (id: number) => win_execute(id, "normal! \<c-b>")
-    maps[Getopt('fullpagedown')] = (id: number) => win_execute(id, "normal! \<c-f>")
-    maps[Getopt('reset')]        = (id: number) => Reset(id, line)
-    maps[Getopt('next')]         = (id: number) => Cycle(id,  1)
-    maps[Getopt('previous')]     = (id: number) => Cycle(id, -1)
-    filter(maps, (k: string, F: func): bool => !empty(k))
-
-    if has_key(maps, key)
-        get(maps, key)(winid)
-        return true
+    if !empty(Getopt('close')) && key == Getopt('close')
+        popup_close(winid)
+    elseif !empty(Getopt('top')) && key == Getopt('top')
+        win_execute(winid, 'normal! gg')
+    elseif !empty(Getopt('bottom')) && key == Getopt('bottom')
+        win_execute(winid, 'normal! G')
+    elseif !empty(Getopt('scrollup')) && key == Getopt('scrollup')
+        win_execute(winid, "normal! \<c-y>")
+    elseif !empty(Getopt('scrolldown')) && key == Getopt('scrolldown')
+        win_execute(winid, "normal! \<c-e>")
+    elseif !empty(Getopt('halfpageup')) && key == Getopt('halfpageup')
+        win_execute(winid, "normal! \<c-u>")
+    elseif !empty(Getopt('halfpagedown')) && key == Getopt('halfpagedown')
+        win_execute(winid, "normal! \<c-d>")
+    elseif !empty(Getopt('fullpageup')) && key == Getopt('fullpageup')
+        win_execute(winid, "normal! \<c-b>")
+    elseif !empty(Getopt('fullpagedown')) && key == Getopt('fullpagedown')
+        win_execute(winid, "normal! \<c-f>")
+    elseif !empty(Getopt('reset')) && key == Getopt('reset')
+        popup_setoptions(winid, {firstline: line})
+        popup_setoptions(winid, {firstline: 0})
+    elseif !empty(Getopt('next')) && key == Getopt('next')
+        Cycle(winid, 1)
+    elseif !empty(Getopt('previous')) && key == Getopt('previous')
+        Cycle(winid, -1)
+    else
+        return false
     endif
-
-    return false
+    return true
 enddef
 
 def Popup_cb(winid: number, result: number)
@@ -208,6 +211,7 @@ export def Open(idx: number): number
     popup_setoptions(popup_id, {firstline: 0})
     setwinvar(popup_id, '&number', Getopt('number'))
     setwinvar(popup_id, '&smoothscroll', true)
+    setwinvar(popup_id, '&conceallevel', 2)
 
     if !empty(Getopt('sign')->get('text', ''))
         setwinvar(popup_id, '&signcolumn', 'number')
