@@ -4,7 +4,7 @@ vim9script
 # File:         after/ftplugin/qf.vim
 # Author:       bfrg <https://github.com/bfrg>
 # Website:      https://github.com/bfrg/vim-qf-preview
-# Last Change:  May 19, 2022
+# Last Change:  Nov 25, 2022
 # License:      Same as Vim itself (see :h license)
 # ==============================================================================
 
@@ -13,7 +13,7 @@ if get(g:, 'no_plugin_maps')
     finish
 endif
 
-import autoload 'qfpreview.vim'
+import autoload '../../autoload/qfpreview.vim'
 
 nnoremap <buffer> <plug>(qf-preview-open) <scriptcmd>qfpreview.Open(line('.') - 1)<cr>
 
