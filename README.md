@@ -94,8 +94,8 @@ groups `QfPreview`, `QfPreviewTitle`, `QfPreviewScrollbar`, `QfPreviewThumb` and
    ```vim
    vim9script
    g:qfpreview = {
-       top: g,
-       bottom: G,
+       top: 'g',
+       bottom: 'G',
        scrollup: 'k',
        scrolldown: 'j',
        halfpageup: 'u',
